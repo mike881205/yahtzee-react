@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
-import TopJumbo from '../TopJumbo'
-import BottomJumbo from '../BottomJumbo'
+import Jumbotron from '../Jumbotron'
 
-class Game extends Component {
+class TopJumbo extends Component {
 
     state ={
 
@@ -15,13 +14,12 @@ class Game extends Component {
 
     render() {
         return (
-            <div>
-                <TopJumbo />
-                <BottomJumbo />
-            </div>
+            <Jumbotron>
+                Hello
+            </Jumbotron>
         )
     }
 
 }
 
-export default Game
+export default TopJumbo
