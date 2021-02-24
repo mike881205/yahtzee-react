@@ -19,16 +19,36 @@ class TopJumbo extends Component {
             { value: 3, src: this.props.images[2], held: false },
             { value: 4, src: this.props.images[3], held: false },
             { value: 5, src: this.props.images[4], held: false },
-            { value: 6, src: this.props.images[5], held: false }
-        ]
+        ],
+        diceSlotChildren: []
     }
 
     componentDidMount() {
+        let diceSlotChildren = []
 
+        for (let i = 0; i < this.state.diceSlots.length; i++) {
+            diceSlotChildren.push(
+                <DiceSlot
+                    key={i}
+                    id={i}
+                    value={this.state.diceSlots[i].value}
+                    src={this.state.diceSlots[i].src}
+                    held={this.state.diceSlots[i].held}
+                    holdBtn={this.holdBtn}
+                    newGame={this.props.newGame}
+                />
+            )
+        }
+
+        this.setState({
+            diceSlotChildren: diceSlotChildren
+        })
     }
 
     shuffle = () => {
+
         let diceSlots = this.state.diceSlots
+        let diceSlotChildren = []
 
         diceSlots.forEach(dice => {
             let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
@@ -38,8 +58,58 @@ class TopJumbo extends Component {
             }
         });
 
+        for (let i = 0; i < diceSlots.length; i++) {
+            diceSlotChildren.push(
+                <DiceSlot
+                    key={i}
+                    id={i}
+                    value={diceSlots[i].value}
+                    src={diceSlots[i].src}
+                    held={diceSlots[i].held}
+                    holdBtn={this.holdBtn}
+                    newGame={this.props.newGame}
+                />
+            )
+        }
+
         this.setState({
-            diceSlots: diceSlots
+            diceSlots: diceSlots,
+            diceSlotChildren: diceSlotChildren
+        })
+    }
+
+    holdBtn = event => {
+        let diceSlots = this.state.diceSlots
+        let diceSlotChildren = []
+
+        console.log(event.target.id)
+
+        for (let i = 0; i < diceSlots.length; i++) {
+            if (parseInt(event.target.id) === i) {
+                if (!diceSlots[i].held) {
+                    diceSlots[i].held = true
+                }
+                else {
+                    diceSlots[i].held = false
+                }
+            }
+
+            diceSlotChildren.push(
+                <DiceSlot
+                    key={i}
+                    id={i}
+                    value={diceSlots[i].value}
+                    src={diceSlots[i].src}
+                    held={diceSlots[i].held}
+                    holdBtn={this.holdBtn}
+                    newGame={this.props.newGame}
+                />
+            )
+        }
+
+        this.setState({
+            diceSlots: diceSlots,
+            diceSlotChildren: diceSlotChildren
         })
     }
 
@@ -47,88 +117,22 @@ class TopJumbo extends Component {
         return (
             <div className="jumbotron" align="center">
                 <div className="row">
-                    <div className="col">
-                        <div className="row">
-                            <div className="col">
-                                <img value={this.state.diceSlots[0].value} src={this.state.diceSlots[0].src}></img>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col">
-                                <FormBtn text="Hold" classes="btn-danger"
-                                // onClick={}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="row">
-                            <div className="col">
-                            <img value={this.state.diceSlots[1].value} src={this.state.diceSlots[1].src}></img>
-
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col">
-                                <FormBtn text="Hold" classes="btn-danger"
-                                // onClick={}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="row">
-                            <div className="col">
-                            <img value={this.state.diceSlots[2].value} src={this.state.diceSlots[2].src}></img>
-
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col">
-                                <FormBtn text="Hold" classes="btn-danger"
-                                // onClick={}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="row">
-                            <div className="col">
-                            <img value={this.state.diceSlots[3].value} src={this.state.diceSlots[3].src}></img>
-
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col">
-                                <FormBtn text="Hold" classes="btn-danger"
-                                // onClick={}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="row">
-                            <div className="col">
-                            <img value={this.state.diceSlots[4].value} src={this.state.diceSlots[4].src}></img>
-
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col">
-                                <FormBtn text="Hold" classes="btn-danger"
-                                // onClick={}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    {this.state.diceSlotChildren}
                 </div>
                 <br></br>
                 <br></br>
                 <div className="row">
                     <div className="col">
-                        <FormBtn text="Shuffle" classes="btn-primary"
-                        onClick={this.shuffle}
-                        />
+                        {
+                            this.props.newGame ?
+                                <FormBtn text="Shuffle" classes="btn-primary"
+                                    onClick={this.shuffle}
+                                />
+                                :
+                                <FormBtn text="New Game" classes="btn-success"
+                                    onClick={this.props.startGame}
+                                />
+                        }
                     </div>
                 </div>
             </div>
