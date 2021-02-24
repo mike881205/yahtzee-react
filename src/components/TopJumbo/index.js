@@ -37,6 +37,8 @@ class TopJumbo extends Component {
                     held={this.state.diceSlots[i].held}
                     holdBtn={this.holdBtn}
                     newGame={this.props.newGame}
+                    turn={this.props.turn}
+                    roundOver={this.props.roundOver}
                 />
             )
         }
@@ -64,6 +66,8 @@ class TopJumbo extends Component {
                         held={false}
                         holdBtn={this.holdBtn}
                         newGame={this.props.newGame}
+                        turn={this.props.turn}
+                        roundOver={this.props.roundOver}
                     />
                 )
             }
@@ -100,6 +104,8 @@ class TopJumbo extends Component {
                         held={diceSlots[i].held}
                         holdBtn={this.holdBtn}
                         newGame={this.props.newGame}
+                        turn={this.props.turn}
+                        roundOver={this.props.roundOver}
                     />
                 )
             }
@@ -137,6 +143,8 @@ class TopJumbo extends Component {
                     held={diceSlots[i].held}
                     holdBtn={this.holdBtn}
                     newGame={this.props.newGame}
+                    turn={this.props.turn}
+                    roundOver={this.props.roundOver}
                 />
             )
         }
@@ -158,14 +166,10 @@ class TopJumbo extends Component {
                 <div className="row">
                     <div className="col">
                         {
-                            this.props.newGame ?
-                                <FormBtn text={this.props.turn === 4 ? "Next Round" : "Shuffle"} classes={this.props.turn === 4 ? "btn-warning" : "btn-primary"}
-                                    onClick={this.shuffle}
-                                />
-                                :
-                                <FormBtn text="New Game" classes="btn-success"
-                                    onClick={this.props.startGame}
-                                />
+                            <FormBtn 
+                            text={!this.props.newGame ? "New Game" : this.props.roundOver ? "Next Round" : "Shuffle"} 
+                            classes={!this.props.newGame ? "btn-success" : this.props.roundOver ? "btn-warning" : "btn-primary"} 
+                            onClick={!this.props.newGame || this.props.roundOver ? this.props.startRound : this.shuffle} />
                         }
                     </div>
                 </div>

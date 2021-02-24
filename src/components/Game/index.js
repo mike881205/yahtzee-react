@@ -9,34 +9,42 @@ class Game extends Component {
 
     state ={
         newGame: false,
-        turn: 1
+        turn: 1,
+        roundOver: true
     }
 
     componentDidMount() {
     }
 
-    startGame = () => {
-        this.setState({
-            newGame: true,
-            turn: 1
-        })
+    startRound = () => {
+        if (!this.state.newGame) {
+            this.setState({
+                newGame: true,
+                roundOver: false
+            })
+        }
+        else {
+            this.setState({
+                roundOver: false
+            })
+        }
     }
 
     updateTurn = () => {
         let turn = this.state.turn
 
-        if (turn < 4) {
+        if (turn === 3) {
+            this.setState({
+                turn: 1,
+                roundOver: true
+            })
+        }
+        else {
             turn++
             this.setState({
                 turn: turn
             })
         }
-        else {
-            this.setState({
-                turn: 1
-            })
-        }
-
     }
 
     render() {
@@ -45,9 +53,10 @@ class Game extends Component {
                 <TopJumbo 
                 images={Images}
                 newGame={this.state.newGame}
-                startGame={this.startGame}
+                startRound={this.startRound}
                 updateTurn={this.updateTurn}
                 turn={this.state.turn}
+                roundOver={this.state.roundOver}
                 />
                 <BottomJumbo />
             </div>
