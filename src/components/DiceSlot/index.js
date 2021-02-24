@@ -24,9 +24,9 @@ class DiceSlot extends Component {
                     <div className="col">
                         {
                             this.props.held ?
-                                <FormBtn text="Held" classes="btn-success" id={this.props.id} onClick={this.props.holdBtn} disabled={!this.props.newGame ? "disabled" : ""} />
+                                <FormBtn text="Held" classes="btn-danger" id={this.props.id} onClick={this.props.holdBtn} disabled={!this.props.newGame ? "disabled" : ""} />
                                 :
-                                <FormBtn text="Hold" classes="btn-danger" id={this.props.id} onClick={this.props.holdBtn} disabled={!this.props.newGame ? "disabled" : ""} />
+                                <FormBtn text="Hold" classes="btn-success" id={this.props.id} onClick={this.props.holdBtn} disabled={!this.props.newGame ? "disabled" : ""} />
                         }
                     </div>
                 </div>

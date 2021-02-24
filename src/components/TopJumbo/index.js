@@ -24,6 +24,7 @@ class TopJumbo extends Component {
     }
 
     componentDidMount() {
+
         let diceSlotChildren = []
 
         for (let i = 0; i < this.state.diceSlots.length; i++) {
@@ -50,39 +51,72 @@ class TopJumbo extends Component {
         let diceSlots = this.state.diceSlots
         let diceSlotChildren = []
 
-        diceSlots.forEach(dice => {
-            let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
-            if (!dice.held) {
-                dice.value = randomDice.value
-                dice.src = randomDice.src
+        console.log(this.props.turn)
+
+        if (this.props.turn === 4) {
+            for (let i = 0; i < this.state.diceSlots.length; i++) {
+                diceSlotChildren.push(
+                    <DiceSlot
+                        key={i}
+                        id={i}
+                        value={this.state.dice[i].value}
+                        src={this.state.dice[i].src}
+                        held={false}
+                        holdBtn={this.holdBtn}
+                        newGame={this.props.newGame}
+                    />
+                )
             }
-        });
 
-        for (let i = 0; i < diceSlots.length; i++) {
-            diceSlotChildren.push(
-                <DiceSlot
-                    key={i}
-                    id={i}
-                    value={diceSlots[i].value}
-                    src={diceSlots[i].src}
-                    held={diceSlots[i].held}
-                    holdBtn={this.holdBtn}
-                    newGame={this.props.newGame}
-                />
-            )
+            this.setState({
+                diceSlots: [
+                    { value: 1, src: this.props.images[0], held: false },
+                    { value: 2, src: this.props.images[1], held: false },
+                    { value: 3, src: this.props.images[2], held: false },
+                    { value: 4, src: this.props.images[3], held: false },
+                    { value: 5, src: this.props.images[4], held: false },
+                ],
+                diceSlotChildren: diceSlotChildren
+            })
+
+            this.props.updateTurn()
         }
+        else {
+            diceSlots.forEach(dice => {
+                let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
+                if (!dice.held) {
+                    dice.value = randomDice.value
+                    dice.src = randomDice.src
+                }
+            });
 
-        this.setState({
-            diceSlots: diceSlots,
-            diceSlotChildren: diceSlotChildren
-        })
+            for (let i = 0; i < diceSlots.length; i++) {
+                diceSlotChildren.push(
+                    <DiceSlot
+                        key={i}
+                        id={i}
+                        value={diceSlots[i].value}
+                        src={diceSlots[i].src}
+                        held={diceSlots[i].held}
+                        holdBtn={this.holdBtn}
+                        newGame={this.props.newGame}
+                    />
+                )
+            }
+
+            this.props.updateTurn()
+
+            this.setState({
+                diceSlots: diceSlots,
+                diceSlotChildren: diceSlotChildren
+            })
+        }
     }
 
     holdBtn = event => {
+
         let diceSlots = this.state.diceSlots
         let diceSlotChildren = []
-
-        console.log(event.target.id)
 
         for (let i = 0; i < diceSlots.length; i++) {
             if (parseInt(event.target.id) === i) {
@@ -125,7 +159,7 @@ class TopJumbo extends Component {
                     <div className="col">
                         {
                             this.props.newGame ?
-                                <FormBtn text="Shuffle" classes="btn-primary"
+                                <FormBtn text={this.props.turn === 4 ? "Next Round" : "Shuffle"} classes={this.props.turn === 4 ? "btn-warning" : "btn-primary"}
                                     onClick={this.shuffle}
                                 />
                                 :
