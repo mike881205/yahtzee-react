@@ -20,37 +20,107 @@ class TopJumbo extends Component {
             { value: 4, src: this.props.images[3], held: false },
             { value: 5, src: this.props.images[4], held: false },
             { value: 6, src: this.props.images[5], held: false }
-        ],
-        diceJSX: []
+        ]
     }
 
     componentDidMount() {
-        let diceJSX = []
-        for (let i = 0; i < 5; i++) {
-            diceJSX.push(
-                <DiceSlot
-                    key={i}
-                    id={i}
-                    value={this.state.diceSlots[i].value}
-                    src={this.state.diceSlots[i].src}
-                />
-            )
-        }
-        this.setState({
-            diceJSX: diceJSX
-        })
+
     }
 
     shuffle = () => {
-        let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
-        console.log(randomDice.value)
+        let diceSlots = this.state.diceSlots
+
+        diceSlots.forEach(dice => {
+            let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
+            if (!dice.held) {
+                dice.value = randomDice.value
+                dice.src = randomDice.src
+            }
+        });
+
+        this.setState({
+            diceSlots: diceSlots
+        })
     }
 
     render() {
         return (
             <div className="jumbotron" align="center">
                 <div className="row">
-                    {this.state.diceJSX}
+                    <div className="col">
+                        <div className="row">
+                            <div className="col">
+                                <img value={this.state.diceSlots[0].value} src={this.state.diceSlots[0].src}></img>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <FormBtn text="Hold" classes="btn-danger"
+                                // onClick={}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="row">
+                            <div className="col">
+                            <img value={this.state.diceSlots[1].value} src={this.state.diceSlots[1].src}></img>
+
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <FormBtn text="Hold" classes="btn-danger"
+                                // onClick={}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="row">
+                            <div className="col">
+                            <img value={this.state.diceSlots[2].value} src={this.state.diceSlots[2].src}></img>
+
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <FormBtn text="Hold" classes="btn-danger"
+                                // onClick={}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="row">
+                            <div className="col">
+                            <img value={this.state.diceSlots[3].value} src={this.state.diceSlots[3].src}></img>
+
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <FormBtn text="Hold" classes="btn-danger"
+                                // onClick={}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="row">
+                            <div className="col">
+                            <img value={this.state.diceSlots[4].value} src={this.state.diceSlots[4].src}></img>
+
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <FormBtn text="Hold" classes="btn-danger"
+                                // onClick={}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <br></br>
                 <br></br>
