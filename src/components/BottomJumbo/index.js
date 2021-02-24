@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
-import Jumbotron from '../Jumbotron'
 
 class BottomJumbo extends Component {
 
@@ -14,9 +13,9 @@ class BottomJumbo extends Component {
 
     render() {
         return (
-            <Jumbotron>
+            <div className="jumbotron" align="center">
                 Hello
-            </Jumbotron>
+            </div>
         )
     }
 
