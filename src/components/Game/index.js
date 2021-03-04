@@ -72,14 +72,18 @@ class Game extends Component {
         }
         else if (!gameOver && roundOver) {
             roundOver = false
+            roll = 0
             for (let i = 0; i < diceSlots.length; i++) {
+                diceSlots[i].value = this.state.dice[i].value
+                diceSlots[i].src = this.state.dice[i].src
+                diceSlots[i].held = false
                 diceSlotChildren.push(
                     <DiceSlot
                         key={i}
                         id={i}
-                        value={this.state.dice[i].value}
-                        src={this.state.dice[i].src}
-                        held={false}
+                        value={diceSlots[i].value}
+                        src={diceSlots[i].src}
+                        held={diceSlots[i].held}
                         holdBtn={this.holdBtn}
                         gameOver={gameOver}
                         roll={roll}
@@ -125,7 +129,6 @@ class Game extends Component {
                 })
             }
             else if (roll === 3) {
-                roll = 0
                 roundOver = true
                 for (let i = 0; i < diceSlots.length; i++) {
                     let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
@@ -163,8 +166,6 @@ class Game extends Component {
         let diceSlots = this.state.diceSlots
         let diceSlotChildren = []
 
-        console.log(event.target.id)
-
         for (let i = 0; i < diceSlots.length; i++) {
             if (parseInt(event.target.id) === i) {
                 if (!diceSlots[i].held) {
@@ -174,7 +175,6 @@ class Game extends Component {
                     diceSlots[i].held = false
                 }
             }
-
             diceSlotChildren.push(
                 <DiceSlot
                     key={i}
@@ -189,7 +189,6 @@ class Game extends Component {
                 />
             )
         }
-
         this.setState({
             diceSlots: diceSlots,
             diceSlotChildren: diceSlotChildren

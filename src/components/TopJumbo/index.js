@@ -9,12 +9,16 @@ class TopJumbo extends Component {
 
     componentDidMount() {
 
-        console.log(this.props)
     }
 
     render() {
         return (
             <div className="jumbotron" align="center">
+                <div className="row">
+                    <div className="col">
+                        <h1>Roll: {this.props.roll}</h1>
+                    </div>
+                </div>
                 <div className="row">
                     {this.props.diceSlotChildren}
                 </div>
