@@ -27,7 +27,23 @@ class Game extends Component {
             { value: 4, src: Images[3], held: false },
             { value: 5, src: Images[4], held: false },
         ],
-        diceSlotChildren: []
+        diceSlotChildren: [],
+        finalValues: [],
+        scoreBoard: [
+            { handName: "Ones", score: 0, used: false },
+            { handName: "Twos", score: 0, used: false },
+            { handName: "Threes", score: 0, used: false },
+            { handName: "Fours", score: 0, used: false },
+            { handName: "Fives", score: 0, used: false },
+            { handName: "Sixes", score: 0, used: false },
+            { handName: "Three-of-a-Kind", score: 0, used: false },
+            { handName: "Four-of-a-Kind", score: 0, used: false },
+            { handName: "Chance", score: 0, used: false },
+            { handName: "Full House", score: 25, used: false },
+            { handName: "Small Straight", score: 30, used: false },
+            { handName: "Large Straight", score: 40, used: false },
+            { handName: "Yahtzee", score: 50, bonus: 0 }
+        ]
     }
 
     componentDidMount() {
@@ -101,8 +117,8 @@ class Game extends Component {
             roll++
             if (roll < 3) {
                 for (let i = 0; i < diceSlots.length; i++) {
-                    let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
                     if (!diceSlots[i].held) {
+                        let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
                         diceSlots[i].value = randomDice.value
                         diceSlots[i].src = randomDice.src
                     }
@@ -130,9 +146,10 @@ class Game extends Component {
             }
             else if (roll === 3) {
                 roundOver = true
+                let finalValues = []
                 for (let i = 0; i < diceSlots.length; i++) {
-                    let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
                     if (!diceSlots[i].held) {
+                        let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
                         diceSlots[i].value = randomDice.value
                         diceSlots[i].src = randomDice.src
                     }
@@ -149,7 +166,11 @@ class Game extends Component {
                             roundOver={roundOver}
                         />
                     )
+
+                    // finalValues = [1, 1, 2, 3, 3]
+                    finalValues.push(diceSlots[i].value)
                 }
+                // this.calcHand(finalValues)
             }
             this.setState({
                 diceSlots: diceSlots,
@@ -193,6 +214,71 @@ class Game extends Component {
             diceSlots: diceSlots,
             diceSlotChildren: diceSlotChildren
         })
+    }
+
+    calcHand = (values) => {
+        let straightCount = 1
+        let smallStraight = false
+        let largeStraight = false
+        let threeOfaKind = false
+        let fourOfaKind = false
+        let fullHouse = false
+        let yahtzee = false
+
+        values.sort(function (a, b) {
+            return a - b;
+        });
+
+        let duplicates = values.filter((item, index) => values.indexOf(item) != index)
+        let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) != index)
+
+        console.log(duplicates)
+
+        // switch (duplicates.length) {
+        //     case 2:
+        //         if (duplicates2.length === 1) {
+        //             threeOfaKind = true
+        //         }
+        //         break;
+        //     case 3:
+        //         if (duplicates2.length === 1) {
+        //             fullHouse = true
+        //             threeOfaKind = true
+        //         }
+        //         else {
+        //             threeOfaKind = true
+        //             fourOfaKind = true
+        //         }
+        //         break;
+        //     case 4:
+        //         threeOfaKind = true
+        //         fourOfaKind = true
+        //         yahtzee = true;
+        //         break;
+        // }
+
+        // for (let i = 0; i < values.length; i++) {
+        //     if (i <= 4) {
+        //         if (values[i + 1] - values[i] === 1) {
+        //             straightCount++
+        //         }
+        //     }
+        // }
+
+        // if (straightCount === 5) {
+        //     smallStraight = true
+        //     largeStraight = true
+        // }
+        // else if (straightCount === 4) {
+        //     smallStraight = true
+        // }
+
+        // console.log("Sml Straight: " + smallStraight)
+        // console.log("Lrg  Straight: " + largeStraight)
+        // console.log("3oaK: " + threeOfaKind)
+        // console.log("4oaK: " + fourOfaKind)
+        // console.log("full house: " + fullHouse)
+        // console.log("yahtzee: " + yahtzee)
     }
 
     render() {

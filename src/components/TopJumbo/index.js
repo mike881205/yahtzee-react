@@ -33,6 +33,24 @@ class TopJumbo extends Component {
                         />
                     </div>
                 </div>
+                {
+                    this.props.roll > 0 && !this.props.roundOver ?
+                        <div>
+                            <br></br>
+                            <br></br>
+                            <div className="row">
+                                <div className="col">
+                                    <FormBtn
+                                        classes={"btn-warning"}
+                                        text={"End Round"}
+                                    // onClick={this.props.shuffle}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        :
+                        ""
+                }
             </div>
         )
     }
