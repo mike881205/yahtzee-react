@@ -10,7 +10,7 @@ class Game extends Component {
 
     state = {
         gameOver: true,
-        turn: 0,
+        roll: 0,
         roundOver: true,
         dice: [
             { value: 1, src: Images[0] },
@@ -43,7 +43,7 @@ class Game extends Component {
                     held={this.state.diceSlots[i].held}
                     holdBtn={this.holdBtn}
                     gameOver={this.state.gameOver}
-                    turn={this.state.turn}
+                    roll={this.state.roll}
                     roundOver={this.state.roundOver}
                 />
             )
@@ -58,11 +58,9 @@ class Game extends Component {
 
         let diceSlots = this.state.diceSlots
         let diceSlotChildren = []
-        let turn = this.state.turn
+        let roll = this.state.roll
         let gameOver = this.state.gameOver
         let roundOver = this.state.roundOver
-
-        console.log(gameOver)
 
         if (gameOver) {
             gameOver = false
@@ -74,73 +72,86 @@ class Game extends Component {
         }
         else if (!gameOver && roundOver) {
             roundOver = false
-            turn = 0
+            for (let i = 0; i < diceSlots.length; i++) {
+                diceSlotChildren.push(
+                    <DiceSlot
+                        key={i}
+                        id={i}
+                        value={this.state.dice[i].value}
+                        src={this.state.dice[i].src}
+                        held={false}
+                        holdBtn={this.holdBtn}
+                        gameOver={gameOver}
+                        roll={roll}
+                        roundOver={roundOver}
+                    />
+                )
+            }
             this.setState({
-                turn: turn,
-                roundOver: roundOver
+                roll: roll,
+                roundOver: roundOver,
+                diceSlotChildren: diceSlotChildren
             })
         }
         else {
-            turn++
-            if (turn < 3) {
-                diceSlots.forEach((slot, i) => {
+            roll++
+            if (roll < 3) {
+                for (let i = 0; i < diceSlots.length; i++) {
                     let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
-                    if (!slot.held) {
-                        slot.value = randomDice.value
-                        slot.src = randomDice.src
-                        diceSlotChildren.push(
-                            <DiceSlot
-                                key={i}
-                                id={i}
-                                value={slot.value}
-                                src={slot.src}
-                                held={slot.held}
-                                holdBtn={this.holdBtn}
-                                gameOver={gameOver}
-                                turn={turn}
-                                roundOver={roundOver}
-                            />
-                        )
+                    if (!diceSlots[i].held) {
+                        diceSlots[i].value = randomDice.value
+                        diceSlots[i].src = randomDice.src
                     }
-                });
-                console.log(turn)
+                    diceSlotChildren.push(
+                        <DiceSlot
+                            key={i}
+                            id={i}
+                            value={diceSlots[i].value}
+                            src={diceSlots[i].src}
+                            held={diceSlots[i].held}
+                            holdBtn={this.holdBtn}
+                            gameOver={gameOver}
+                            roll={roll}
+                            roundOver={roundOver}
+                        />
+                    )
+                }
                 this.setState({
                     diceSlots: diceSlots,
                     diceSlotChildren: diceSlotChildren,
-                    turn: turn,
+                    roll: roll,
                     gameOver: gameOver,
                     roundOver: roundOver
                 })
             }
-            else if (turn === 3) {
+            else if (roll === 3) {
+                roll = 0
                 roundOver = true
-                diceSlots.forEach((slot, i) => {
+                for (let i = 0; i < diceSlots.length; i++) {
                     let randomDice = this.state.dice[Math.floor(Math.random() * this.state.dice.length)]
-                    if (!slot.held) {
-                        slot.value = randomDice.value
-                        slot.src = randomDice.src
-                        diceSlotChildren.push(
-                            <DiceSlot
-                                key={i}
-                                id={i}
-                                value={slot.value}
-                                src={slot.src}
-                                held={slot.held}
-                                holdBtn={this.holdBtn}
-                                gameOver={gameOver}
-                                turn={turn}
-                                roundOver={roundOver}
-                            />
-                        )
+                    if (!diceSlots[i].held) {
+                        diceSlots[i].value = randomDice.value
+                        diceSlots[i].src = randomDice.src
                     }
-                });
+                    diceSlotChildren.push(
+                        <DiceSlot
+                            key={i}
+                            id={i}
+                            value={diceSlots[i].value}
+                            src={diceSlots[i].src}
+                            held={diceSlots[i].held}
+                            holdBtn={this.holdBtn}
+                            gameOver={gameOver}
+                            roll={roll}
+                            roundOver={roundOver}
+                        />
+                    )
+                }
             }
-
-            console.log(turn)
             this.setState({
                 diceSlots: diceSlots,
                 diceSlotChildren: diceSlotChildren,
-                turn: turn,
+                roll: roll,
                 gameOver: gameOver,
                 roundOver: roundOver
             })
@@ -151,6 +162,8 @@ class Game extends Component {
 
         let diceSlots = this.state.diceSlots
         let diceSlotChildren = []
+
+        console.log(event.target.id)
 
         for (let i = 0; i < diceSlots.length; i++) {
             if (parseInt(event.target.id) === i) {
@@ -171,7 +184,7 @@ class Game extends Component {
                     held={diceSlots[i].held}
                     holdBtn={this.holdBtn}
                     gameOver={this.state.gameOver}
-                    turn={this.state.turn}
+                    roll={this.state.roll}
                     roundOver={this.state.roundOver}
                 />
             )
@@ -191,7 +204,7 @@ class Game extends Component {
                     shuffle={this.shuffle}
                     holdBtn={this.holdBtn}
                     gameOver={this.state.gameOver}
-                    turn={this.state.turn}
+                    roll={this.state.roll}
                     roundOver={this.state.roundOver}
                 />
                 <BottomJumbo />

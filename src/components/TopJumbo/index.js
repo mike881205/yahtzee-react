@@ -22,11 +22,11 @@ class TopJumbo extends Component {
                 <br></br>
                 <div className="row">
                     <div className="col">
-                            <FormBtn 
-                                classes={this.props.gameOver ? "btn-success" : this.props.roundOver ? "btn-warning" : "btn-primary"}
-                                text={this.props.gameOver ? "New Game" : this.props.roundOver ? "Next Round" : "Shuffle"}
-                                onClick={this.props.shuffle}
-                            />
+                        <FormBtn
+                            classes={this.props.gameOver ? "btn-success" : this.props.roundOver ? "btn-warning" : "btn-primary"}
+                            text={this.props.gameOver ? "New Game" : this.props.roundOver ? "Next Round" : "Shuffle"}
+                            onClick={this.props.shuffle}
+                        />
                     </div>
                 </div>
             </div>
