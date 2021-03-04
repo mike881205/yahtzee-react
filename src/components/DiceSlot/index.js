@@ -23,10 +23,12 @@ class DiceSlot extends Component {
                 <div className="row">
                     <div className="col">
                         {
-                            this.props.held ?
-                                <FormBtn text="Held" classes="btn-danger" id={this.props.id} onClick={this.props.holdBtn} disabled={this.props.roundOver || this.props.turn === 3 ? "disabled" : ""} />
-                                :
-                                <FormBtn text="Hold" classes="btn-success" id={this.props.id} onClick={this.props.holdBtn} disabled={this.props.roundOver || this.props.turn === 3 ? "disabled" : ""} />
+                            <FormBtn 
+                                classes={this.props.held ? "btn-danger" : "btn-success"}
+                                text={this.props.held ? "Held" : "Hold"}
+                                // onClick={}
+                                disabled={this.props.gameOver || this.props.roundOver ? "disabled" : ""}
+                            />
                         }
                     </div>
                 </div>
