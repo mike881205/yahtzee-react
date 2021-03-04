@@ -216,7 +216,39 @@ class Game extends Component {
         })
     }
 
+    endRound = () => {
+        let diceSlots = this.state.diceSlots
+        let diceSlotChildren = []
+        let finalValues = []
+
+        for (let i = 0; i < diceSlots.length; i++) {
+            finalValues.push(diceSlots[i].value)
+            diceSlotChildren.push(
+                <DiceSlot
+                    key={i}
+                    id={i}
+                    value={diceSlots[i].value}
+                    src={diceSlots[i].src}
+                    held={diceSlots[i].held}
+                    holdBtn={this.holdBtn}
+                    gameOver={this.state.gameOver}
+                    roll={this.state.roll}
+                    roundOver={true}
+                />
+            )
+        }
+
+        // finalValues = [1, 1, 2, 3, 3]
+        this.calcHand(finalValues)
+
+        this.setState({
+            roundOver: true,
+            diceSlotChildren: diceSlotChildren
+        })
+    }
+
     calcHand = (values) => {
+
         let straightCount = 1
         let smallStraight = false
         let largeStraight = false
@@ -229,10 +261,12 @@ class Game extends Component {
             return a - b;
         });
 
-        let duplicates = values.filter((item, index) => values.indexOf(item) != index)
-        let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) != index)
+        console.log(values)
 
-        console.log(duplicates)
+        // let duplicates = values.filter((item, index) => values.indexOf(item) != index)
+        // let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) != index)
+
+        // console.log(duplicates)
 
         // switch (duplicates.length) {
         //     case 2:
@@ -286,8 +320,10 @@ class Game extends Component {
             <div>
                 <TopJumbo
                     diceSlotChildren={this.state.diceSlotChildren}
+                    diceSlots={this.state.diceSlots}
                     shuffle={this.shuffle}
                     holdBtn={this.holdBtn}
+                    endRound={this.endRound}
                     gameOver={this.state.gameOver}
                     roll={this.state.roll}
                     roundOver={this.state.roundOver}

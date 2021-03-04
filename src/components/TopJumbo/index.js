@@ -43,7 +43,7 @@ class TopJumbo extends Component {
                                     <FormBtn
                                         classes={"btn-warning"}
                                         text={"End Round"}
-                                    // onClick={this.props.shuffle}
+                                        onClick={() => this.props.endRound(this.props.diceSlots, this.props.roundOver, this.props.diceSlotChildren)}
                                     />
                                 </div>
                             </div>
