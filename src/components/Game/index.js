@@ -29,20 +29,26 @@ class Game extends Component {
         ],
         diceSlotChildren: [],
         finalValues: [],
-        scoreBoard: [
-            { handName: "Ones", score: 0, validHand: false, available: true },
-            { handName: "Twos", score: 0, validHand: false, available: true },
-            { handName: "Threes", score: 0, validHand: false, available: true },
-            { handName: "Fours", score: 0, validHand: false, available: true },
-            { handName: "Fives", score: 0, validHand: false, available: true },
-            { handName: "Sixes", score: 0, validHand: false, available: true },
-            { handName: "Three-of-a-Kind", score: 0, validHand: false, available: true },
-            { handName: "Four-of-a-Kind", score: 0, validHand: false, available: true },
-            { handName: "Chance", score: 0, validHand: false, available: true },
-            { handName: "Full House", score: 25, validHand: false, available: true },
-            { handName: "Small Straight", score: 30, validHand: false, available: true },
-            { handName: "Large Straight", score: 40, validHand: false, available: true },
-            { handName: "Yahtzee", score: 50, bonus: 0, validHand: false}
+        scoreBoard1: [
+            { handName: "Ones", available: true, validHand: false, value: 1 },
+            { handName: "Twos", available: true, validHand: false, value: 2 },
+            { handName: "Threes", available: true, validHand: false, value: 3 },
+            { handName: "Fours", available: true, validHand: false, value: 4 },
+            { handName: "Fives", available: true, validHand: false, value: 5 },
+            { handName: "Sixes", available: true, validHand: false, value: 6 }
+        ],
+        scoreBoard2: [
+            { handName: "Three-of-a-Kind", available: true, validHand: false },
+            { handName: "Four-of-a-Kind", available: true, validHand: false }
+        ],
+        scoreBoard3: [
+            { handName: "Full House", available: true, validHand: false, points: 25 },
+            { handName: "Small Straight", available: true, validHand: false, points: 30 },
+            { handName: "Large Straight", available: true, validHand: false, points: 40 }
+        ],
+        scoreBoard4: [
+            { handName: "Chance", available: true },
+            { handName: "Yahtzee", validHand: false, count: 0 }
         ]
     }
 
@@ -252,17 +258,26 @@ class Game extends Component {
     calcHand = (values) => {
 
         let straightCount = 1
-        let smallStraight = false
-        let largeStraight = false
-        let threeOfaKind = false
-        let fourOfaKind = false
-        let fullHouse = false
-        let yahtzee = false
-        let scoreBoard = this.state.scoreBoard
+        let scoreBoard1 = this.state.scoreBoard1
+        let scoreBoard2 = this.state.scoreBoard2
+        let scoreBoard3 = this.state.scoreBoard3
+        let scoreBoard4 = this.state.scoreBoard4
 
         values.sort(function (a, b) {
             return a - b;
         });
+
+        // Find numerical hands
+
+        for (let i = 0; i < values.length; i++) {
+            for (let j = 0; j < scoreBoard1.length; j++) {
+                if (values[i] === scoreBoard1[j].value) {
+                    scoreBoard1[j].validHand = true
+                }
+            }
+        }
+
+        // Find Duplicates
 
         let duplicates = values.filter((item, index) => values.indexOf(item) != index)
         let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) != index)
@@ -270,25 +285,27 @@ class Game extends Component {
         switch (duplicates.length) {
             case 2:
                 if (duplicates2.length === 1) {
-                    threeOfaKind = true
+                    scoreBoard2[0].validHand = true
                 }
                 break;
             case 3:
                 if (duplicates2.length === 1) {
-                    threeOfaKind = true
-                    fullHouse = true
+                    scoreBoard2[0].validHand = true
+                    scoreBoard3[0].validHand = true
                 }
                 else {
-                    threeOfaKind = true
-                    fourOfaKind = true
+                    scoreBoard2[0].validHand = true
+                    scoreBoard2[1].validHand = true
                 }
                 break;
             case 4:
-                threeOfaKind = true
-                fourOfaKind = true
-                yahtzee = true;
+                scoreBoard2[0].validHand = true
+                scoreBoard2[1].validHand = true
+                scoreBoard4[1].validHand = true
                 break;
         }
+
+        // Find Straights
 
         for (let i = 0; i < values.length - 1; i++) {
             if (values[i + 1] - values[i] === 1) {
@@ -297,20 +314,17 @@ class Game extends Component {
         }
 
         if (straightCount === 5) {
-            smallStraight = true
-            largeStraight = true
+            scoreBoard3[1].validHand = true
+            scoreBoard3[2].validHand = true
         }
         else if (straightCount === 4) {
-            smallStraight = true
+            scoreBoard3[1].validHand = true
         }
 
-        console.log("Sml Straight: " + smallStraight)
-        console.log("Lrg  Straight: " + largeStraight)
-        console.log("3oaK: " + threeOfaKind)
-        console.log("4oaK: " + fourOfaKind)
-        console.log("full house: " + fullHouse)
-        console.log("yahtzee: " + yahtzee)
-        console.log("nothing: " + yahtzee)
+        console.table(scoreBoard1)
+        console.table(scoreBoard2)
+        console.table(scoreBoard3)
+        console.table(scoreBoard4)
     }
 
     render() {
