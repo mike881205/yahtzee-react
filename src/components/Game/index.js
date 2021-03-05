@@ -79,10 +79,10 @@ class Game extends Component {
         for (let i = 0; i < this.state.scoreBoard[0].length; i++) {
             handChildren.push(
                 <ScoreBoardRow
-                    key={i}
-                    id={i}
+                    key={i + "1"}
+                    id={i + "1"}
                     hand={this.state.scoreBoard[0][i].handName}
-                    score={i+1}
+                    points={""}
                 />
             )
         }

@@ -15,10 +15,11 @@ class ScoreBoardRow extends Component {
         return (
             <div className="row">
                 <div className="col">
-                    {this.props.hand}
+                    <p>{this.props.hand}</p>
                 </div>
                 <div className="col">
-                    {this.props.score}
+                <p>Points</p>
+                {/* <p>{this.props.points}</p> */}
                 </div>
             </div>
         )
