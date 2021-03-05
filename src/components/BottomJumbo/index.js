@@ -3,7 +3,7 @@ import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
 
 class BottomJumbo extends Component {
 
-    state ={
+    state = {
 
     }
 
@@ -14,7 +14,30 @@ class BottomJumbo extends Component {
     render() {
         return (
             <div className="jumbotron" align="center">
-                Hello
+                <div className="row">
+                    <div className="col">
+                        {/* side values */}
+                        <div className="row">
+                            <div className="col">
+                                Hand
+                            </div>
+                            <div className="col">
+                                Points
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col">
+                        {/* Other Hands */}
+                        <div className="row">
+                            <div className="col">
+                                Hand
+                            </div>
+                            <div className="col">
+                                Points
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         )
     }
