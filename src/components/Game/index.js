@@ -30,19 +30,19 @@ class Game extends Component {
         diceSlotChildren: [],
         finalValues: [],
         scoreBoard: [
-            { handName: "Ones", score: 0, used: false },
-            { handName: "Twos", score: 0, used: false },
-            { handName: "Threes", score: 0, used: false },
-            { handName: "Fours", score: 0, used: false },
-            { handName: "Fives", score: 0, used: false },
-            { handName: "Sixes", score: 0, used: false },
-            { handName: "Three-of-a-Kind", score: 0, used: false },
-            { handName: "Four-of-a-Kind", score: 0, used: false },
-            { handName: "Chance", score: 0, used: false },
-            { handName: "Full House", score: 25, used: false },
-            { handName: "Small Straight", score: 30, used: false },
-            { handName: "Large Straight", score: 40, used: false },
-            { handName: "Yahtzee", score: 50, bonus: 0 }
+            { handName: "Ones", score: 0, validHand: false, available: true },
+            { handName: "Twos", score: 0, validHand: false, available: true },
+            { handName: "Threes", score: 0, validHand: false, available: true },
+            { handName: "Fours", score: 0, validHand: false, available: true },
+            { handName: "Fives", score: 0, validHand: false, available: true },
+            { handName: "Sixes", score: 0, validHand: false, available: true },
+            { handName: "Three-of-a-Kind", score: 0, validHand: false, available: true },
+            { handName: "Four-of-a-Kind", score: 0, validHand: false, available: true },
+            { handName: "Chance", score: 0, validHand: false, available: true },
+            { handName: "Full House", score: 25, validHand: false, available: true },
+            { handName: "Small Straight", score: 30, validHand: false, available: true },
+            { handName: "Large Straight", score: 40, validHand: false, available: true },
+            { handName: "Yahtzee", score: 50, bonus: 0, validHand: false}
         ]
     }
 
@@ -70,7 +70,9 @@ class Game extends Component {
         })
     }
 
-    shuffle = () => {
+    shuffle = (event) => {
+
+        event.preventDefault()
 
         let diceSlots = this.state.diceSlots
         let diceSlotChildren = []
@@ -170,7 +172,7 @@ class Game extends Component {
                     // finalValues = [1, 1, 2, 3, 3]
                     finalValues.push(diceSlots[i].value)
                 }
-                // this.calcHand(finalValues)
+                this.calcHand(finalValues)
             }
             this.setState({
                 diceSlots: diceSlots,
@@ -238,7 +240,7 @@ class Game extends Component {
             )
         }
 
-        // finalValues = [1, 1, 2, 3, 3]
+        // finalValues = [1, 1, 1, 3, 3]
         this.calcHand(finalValues)
 
         this.setState({
@@ -256,63 +258,59 @@ class Game extends Component {
         let fourOfaKind = false
         let fullHouse = false
         let yahtzee = false
+        let scoreBoard = this.state.scoreBoard
 
         values.sort(function (a, b) {
             return a - b;
         });
 
-        console.log(values)
+        let duplicates = values.filter((item, index) => values.indexOf(item) != index)
+        let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) != index)
 
-        // let duplicates = values.filter((item, index) => values.indexOf(item) != index)
-        // let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) != index)
+        switch (duplicates.length) {
+            case 2:
+                if (duplicates2.length === 1) {
+                    threeOfaKind = true
+                }
+                break;
+            case 3:
+                if (duplicates2.length === 1) {
+                    threeOfaKind = true
+                    fullHouse = true
+                }
+                else {
+                    threeOfaKind = true
+                    fourOfaKind = true
+                }
+                break;
+            case 4:
+                threeOfaKind = true
+                fourOfaKind = true
+                yahtzee = true;
+                break;
+        }
 
-        // console.log(duplicates)
+        for (let i = 0; i < values.length - 1; i++) {
+            if (values[i + 1] - values[i] === 1) {
+                straightCount++
+            }
+        }
 
-        // switch (duplicates.length) {
-        //     case 2:
-        //         if (duplicates2.length === 1) {
-        //             threeOfaKind = true
-        //         }
-        //         break;
-        //     case 3:
-        //         if (duplicates2.length === 1) {
-        //             fullHouse = true
-        //             threeOfaKind = true
-        //         }
-        //         else {
-        //             threeOfaKind = true
-        //             fourOfaKind = true
-        //         }
-        //         break;
-        //     case 4:
-        //         threeOfaKind = true
-        //         fourOfaKind = true
-        //         yahtzee = true;
-        //         break;
-        // }
+        if (straightCount === 5) {
+            smallStraight = true
+            largeStraight = true
+        }
+        else if (straightCount === 4) {
+            smallStraight = true
+        }
 
-        // for (let i = 0; i < values.length; i++) {
-        //     if (i <= 4) {
-        //         if (values[i + 1] - values[i] === 1) {
-        //             straightCount++
-        //         }
-        //     }
-        // }
-
-        // if (straightCount === 5) {
-        //     smallStraight = true
-        //     largeStraight = true
-        // }
-        // else if (straightCount === 4) {
-        //     smallStraight = true
-        // }
-
-        // console.log("Sml Straight: " + smallStraight)
-        // console.log("Lrg  Straight: " + largeStraight)
-        // console.log("3oaK: " + threeOfaKind)
-        // console.log("4oaK: " + fourOfaKind)
-        // console.log("full house: " + fullHouse)
-        // console.log("yahtzee: " + yahtzee)
+        console.log("Sml Straight: " + smallStraight)
+        console.log("Lrg  Straight: " + largeStraight)
+        console.log("3oaK: " + threeOfaKind)
+        console.log("4oaK: " + fourOfaKind)
+        console.log("full house: " + fullHouse)
+        console.log("yahtzee: " + yahtzee)
+        console.log("nothing: " + yahtzee)
     }
 
     render() {

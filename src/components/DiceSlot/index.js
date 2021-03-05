@@ -20,6 +20,7 @@ class DiceSlot extends Component {
 
                     </div>
                 </div>
+                <br></br>
                 <div className="row">
                     <div className="col">
                         <FormBtn
