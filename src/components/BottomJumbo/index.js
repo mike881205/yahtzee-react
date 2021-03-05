@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
+import ScoreBoardRow from '../ScoreBoardRow'
 
 class BottomJumbo extends Component {
 
@@ -25,6 +26,7 @@ class BottomJumbo extends Component {
                                 Points
                             </div>
                         </div>
+                        {this.props.handChildren}
                     </div>
                     <div className="col">
                         {/* Other Hands */}

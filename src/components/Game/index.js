@@ -3,6 +3,7 @@ import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
 import TopJumbo from '../TopJumbo'
 import BottomJumbo from '../BottomJumbo'
 import DiceSlot from '../DiceSlot'
+import ScoreBoardRow from '../ScoreBoardRow'
 import Images from '../../imgImport'
 import './style.css'
 
@@ -51,27 +52,6 @@ class Game extends Component {
                 { handName: "Yahtzee", validHand: false, count: 0 }
             ]
         ],
-        scoreBoard1: [
-            { handName: "Ones", available: true, validHand: false, value: 1 },
-            { handName: "Twos", available: true, validHand: false, value: 2 },
-            { handName: "Threes", available: true, validHand: false, value: 3 },
-            { handName: "Fours", available: true, validHand: false, value: 4 },
-            { handName: "Fives", available: true, validHand: false, value: 5 },
-            { handName: "Sixes", available: true, validHand: false, value: 6 }
-        ],
-        scoreBoard2: [
-            { handName: "Three-of-a-Kind", available: true, validHand: false },
-            { handName: "Four-of-a-Kind", available: true, validHand: false }
-        ],
-        scoreBoard3: [
-            { handName: "Full House", available: true, validHand: false, points: 25 },
-            { handName: "Small Straight", available: true, validHand: false, points: 30 },
-            { handName: "Large Straight", available: true, validHand: false, points: 40 }
-        ],
-        scoreBoard4: [
-            { handName: "Chance", available: true },
-            { handName: "Yahtzee", validHand: false, count: 0 }
-        ],
         handChildren: []
     }
 
@@ -96,10 +76,20 @@ class Game extends Component {
             )
         }
 
-        for (let i = 0; i < this.state.diceSlots.length; i++)
+        for (let i = 0; i < this.state.scoreBoard[0].length; i++) {
+            handChildren.push(
+                <ScoreBoardRow
+                    key={i}
+                    id={i}
+                    hand={this.state.scoreBoard[0][i].handName}
+                    score={i+1}
+                />
+            )
+        }
 
         this.setState({
-            diceSlotChildren: diceSlotChildren
+            diceSlotChildren: diceSlotChildren,
+            handChildren: handChildren
         })
     }
 
@@ -297,14 +287,6 @@ class Game extends Component {
 
         // Find side values
 
-        // for (let i = 0; i < values.length; i++) {
-        //     for (let j = 0; j < scoreBoard1.length; j++) {
-        //         if (values[i] === scoreBoard1[j].value) {
-        //             scoreBoard1[j].validHand = true
-        //         }
-        //     }
-        // }
-
         for (let i = 0; i < values.length; i++) {
             for (let j = 0; j < scoreBoard[0].length; j++) {
                 if (values[i] === scoreBoard[0][j].value) {
@@ -322,14 +304,12 @@ class Game extends Component {
             case 2:
                 if (duplicates2.length === 1) {
                     scoreBoard[1][0].validHand = true
-                    // scoreBoard[1][0].validHand = true
                 }
                 break;
             case 3:
                 if (duplicates2.length === 1) {
                     scoreBoard[1][0].validHand = true
                     scoreBoard[2][0].validHand = true
-                    // scoreBoard3[0].validHand = true
                 }
                 else {
                     scoreBoard[1][0].validHand = true
@@ -340,7 +320,6 @@ class Game extends Component {
                 scoreBoard[1][0].validHand = true
                 scoreBoard[1][1].validHand = true
                 scoreBoard[3][1].validHand = true
-                // scoreBoard4[1].validHand = true
                 break;
         }
 
@@ -355,19 +334,12 @@ class Game extends Component {
         if (straightCount === 5) {
             scoreBoard[2][1].validHand = true
             scoreBoard[2][2].validHand = true
-            // scoreBoard3[1].validHand = true
-            // scoreBoard3[2].validHand = true
         }
         else if (straightCount === 4) {
             scoreBoard[2][1].validHand = true
         }
 
-        console.table(scoreBoard)
-
-        // console.table(scoreBoard1)
-        // console.table(scoreBoard2)
-        // console.table(scoreBoard3)
-        // console.table(scoreBoard4)
+        console.log(scoreBoard)
     }
 
     render() {
@@ -383,7 +355,9 @@ class Game extends Component {
                     roll={this.state.roll}
                     roundOver={this.state.roundOver}
                 />
-                <BottomJumbo />
+                <BottomJumbo
+                    handChildren={this.state.handChildren}
+                />
             </div>
         )
     }
