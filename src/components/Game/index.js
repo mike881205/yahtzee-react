@@ -48,16 +48,18 @@ class Game extends Component {
                 { handName: "Large Straight", available: true, validHand: false, points: 40 }
             ],
             [
-                { handName: "Chance", available: true },
-                { handName: "Yahtzee", validHand: false, count: 0 }
+                { handName: "Yahtzee", validHand: false, count: 0 },
+                { handName: "Chance", available: true }
             ]
         ],
-        handChildren: []
+        handChildrenLeft: [],
+        handChildrenRight: []
     }
 
     componentDidMount() {
         let diceSlotChildren = []
-        let handChildren = []
+        let handChildrenLeft = []
+        let handChildrenRight = []
 
         for (let i = 0; i < this.state.diceSlots.length; i++) {
             diceSlotChildren.push(
@@ -76,20 +78,46 @@ class Game extends Component {
             )
         }
 
-        for (let i = 0; i < this.state.scoreBoard[0].length; i++) {
-            handChildren.push(
-                <ScoreBoardRow
-                    key={i + "1"}
-                    id={i + "1"}
-                    hand={this.state.scoreBoard[0][i].handName}
-                    points={""}
-                />
-            )
+        for (let i = 0; i < this.state.scoreBoard.length; i++) {
+            for (let j = 0; j < this.state.scoreBoard[i].length; j++) {
+                if (i === 0) {
+                    handChildrenLeft.push(
+                        <ScoreBoardRow
+                            key={i + '' + j + "Left"}
+                            id={i + '' + j + "Left"}
+                            hand={this.state.scoreBoard[i][j].handName}
+                            points={""}
+                        />
+                    )
+                }
+                else {
+                    handChildrenRight.push(
+                        <ScoreBoardRow
+                            key={i + '' + j + "Right"}
+                            id={i + '' + j + "Right"}
+                            hand={this.state.scoreBoard[i][j].handName}
+                            points={""}
+                        />
+                    )
+                }
+            }
         }
+
+        // for (let i = 0; i < this.state.scoreBoard[0].length; i++) {
+        //     handChildrenLeft.push(
+        //         <ScoreBoardRow
+        //             key={i + "1"}
+        //             id={i + "1"}
+        //             hand={this.state.scoreBoard[0][i].handName}
+        //             points={""}
+        //         />
+        //     )
+        // }
 
         this.setState({
             diceSlotChildren: diceSlotChildren,
-            handChildren: handChildren
+            handChildrenLeft: handChildrenLeft,
+            handChildrenRight: handChildrenRight
         })
     }
 
@@ -276,10 +304,6 @@ class Game extends Component {
 
         let straightCount = 1
         let scoreBoard = this.state.scoreBoard
-        let scoreBoard1 = this.state.scoreBoard1
-        let scoreBoard2 = this.state.scoreBoard2
-        let scoreBoard3 = this.state.scoreBoard3
-        let scoreBoard4 = this.state.scoreBoard4
 
         values.sort(function (a, b) {
             return a - b;
@@ -356,7 +380,8 @@ class Game extends Component {
                     roundOver={this.state.roundOver}
                 />
                 <BottomJumbo
-                    handChildren={this.state.handChildren}
+                    handChildrenLeft={this.state.handChildrenLeft}
+                    handChildrenRight={this.state.handChildrenRight}
                 />
             </div>
         )
