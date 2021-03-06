@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
+import { FormBtn } from "../../components/Form";
 
 class DiceSlot extends Component {
 
@@ -16,7 +16,7 @@ class DiceSlot extends Component {
             <div className="col">
                 <div className="row">
                     <div className="col">
-                        <img value={this.props.value} src={this.props.src}></img>
+                        <img value={this.props.value} src={this.props.src} alt={this.props.src}></img>
 
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
+// import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
 import TopJumbo from '../TopJumbo'
 import BottomJumbo from '../BottomJumbo'
 import DiceSlot from '../DiceSlot'
@@ -59,6 +59,7 @@ class Game extends Component {
         leftTotalScore: 0,
         yahtzeeBonusCount: 0,
         yahtzeeBonus: 0,
+        rightTopScore: 0,
         rightTotalScore: 0,
         grandTotalScore: 0
     }
@@ -67,6 +68,12 @@ class Game extends Component {
         let diceSlotChildren = []
         let handChildrenLeft = []
         let handChildrenRight = []
+        let leftTopScore = this.state.leftTopScore;
+        let leftTotalScore;
+        let rightTopScore = this.state.rightTopScore;
+        let rightTotalScore;
+        let yahtzeeBonus;
+        let grandTotalScore;
 
         for (let i = 0; i < this.state.diceSlots.length; i++) {
             diceSlotChildren.push(
@@ -96,6 +103,7 @@ class Game extends Component {
                             points={this.state.scoreBoard[i][j].points}
                         />
                     )
+                    leftTopScore += this.state.scoreBoard[i][j].points
                 }
                 else {
                     handChildrenRight.push(
@@ -106,14 +114,26 @@ class Game extends Component {
                             points={this.state.scoreBoard[i][j].points}
                         />
                     )
+                    rightTopScore += this.state.scoreBoard[i][j].points
                 }
             }
         }
 
+        yahtzeeBonus = this.state.yahtzeeBonusCount * 100
+        leftTotalScore = leftTopScore + this.state.leftTopBonus
+        rightTotalScore = rightTopScore + yahtzeeBonus
+        grandTotalScore = leftTotalScore + rightTotalScore
+
         this.setState({
             diceSlotChildren: diceSlotChildren,
             handChildrenLeft: handChildrenLeft,
-            handChildrenRight: handChildrenRight
+            handChildrenRight: handChildrenRight,
+            leftTopScore: leftTopScore,
+            leftTotalScore: leftTotalScore,
+            rightTopScore: rightTopScore,
+            rightTotalScore: rightTotalScore,
+            yahtzeeBonus: yahtzeeBonus,
+            grandTotalScore: grandTotalScore
         })
     }
 
@@ -216,7 +236,6 @@ class Game extends Component {
                         />
                     )
 
-                    // finalValues = [1, 1, 2, 3, 3]
                     finalValues.push(diceSlots[i].value)
                 }
                 this.calcHand(finalValues)
@@ -287,7 +306,6 @@ class Game extends Component {
             )
         }
 
-        // finalValues = [1, 1, 1, 3, 3]
         this.calcHand(finalValues)
 
         this.setState({
@@ -298,27 +316,21 @@ class Game extends Component {
 
     calcHand = (values) => {
 
-        let straightCount = 1
+        let straights = []
         let scoreBoard = this.state.scoreBoard
 
         values.sort(function (a, b) {
             return a - b;
         });
 
-        // Find side values
+        // values = [2, 3, 4, 5, 6]
 
-        for (let i = 0; i < values.length; i++) {
-            for (let j = 0; j < scoreBoard[0].length; j++) {
-                if (values[i] === scoreBoard[0][j].value) {
-                    scoreBoard[0][j].validHand = true
-                }
-            }
-        }
+        console.log(values)
 
         // Find Duplicates
 
-        let duplicates = values.filter((item, index) => values.indexOf(item) != index)
-        let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) != index)
+        let duplicates = values.filter((item, index) => values.indexOf(item) !== index)
+        let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) !== index)
 
         switch (duplicates.length) {
             case 2:
@@ -345,21 +357,53 @@ class Game extends Component {
 
         // Find Straights
 
-        for (let i = 0; i < values.length - 1; i++) {
-            if (values[i + 1] - values[i] === 1) {
-                straightCount++
+        if (!scoreBoard[1][0].validHand) {
+
+            for (let i = 0; i < values.length - 1; i++) {
+                if (values[i + 1] - values[i] === 1) {
+                    straights.push(values[i], values[i + 1])
+                }
+            }
+
+            let strtBeforeSplice = straights
+            console.log(strtBeforeSplice)
+
+            for (let i = 0; i < straights.length; i++) {
+                if (straights[i] === straights[i+1]) {
+                    straights.splice(i, 1)
+                }
+            }
+
+            let strtAfterSplice = straights
+            console.log(strtAfterSplice)
+
+            if (strtAfterSplice.length === 4 && strtAfterSplice !== strtBeforeSplice) {
+                scoreBoard[2][1].validHand = true
+            }
+            else if (strtAfterSplice.length === 5 && strtAfterSplice == strtBeforeSplice) {
+                scoreBoard[2][1].validHand = true
+                scoreBoard[2][2].validHand = true
             }
         }
 
-        if (straightCount === 5) {
-            scoreBoard[2][1].validHand = true
-            scoreBoard[2][2].validHand = true
-        }
-        else if (straightCount === 4) {
-            scoreBoard[2][1].validHand = true
+        // Find side values
+
+        for (let i = 0; i < values.length; i++) {
+            for (let j = 0; j < scoreBoard[0].length; j++) {
+                if (values[i] === scoreBoard[0][j].value) {
+                    scoreBoard[0][j].validHand = true
+                }
+            }
         }
 
-        console.log(scoreBoard)
+        console.log("Valid Hands")
+        for (let i = 0; i < scoreBoard.length; i++) {
+            for (let j = 0; j < scoreBoard[i].length; j++) {
+                if (scoreBoard[i][j].validHand) {
+                    console.log(scoreBoard[i][j].handName)
+                }
+            }
+        }
     }
 
     render() {

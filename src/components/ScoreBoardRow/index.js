@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
+// import { FormGroup, Input, Label, Small, FormBtn } from "../../components/Form";
 
 class ScoreBoardRow extends Component {
 
