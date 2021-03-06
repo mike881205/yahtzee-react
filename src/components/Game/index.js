@@ -31,29 +31,36 @@ class Game extends Component {
         diceSlotChildren: [],
         scoreBoard: [
             [
-                { handName: "Ones", available: true, validHand: false, value: 1 },
-                { handName: "Twos", available: true, validHand: false, value: 2 },
-                { handName: "Threes", available: true, validHand: false, value: 3 },
-                { handName: "Fours", available: true, validHand: false, value: 4 },
-                { handName: "Fives", available: true, validHand: false, value: 5 },
-                { handName: "Sixes", available: true, validHand: false, value: 6 }
+                { handName: "Ones", available: true, validHand: false, value: 1, points: 0 },
+                { handName: "Twos", available: true, validHand: false, value: 2, points: 0 },
+                { handName: "Threes", available: true, validHand: false, value: 3, points: 0 },
+                { handName: "Fours", available: true, validHand: false, value: 4, points: 0 },
+                { handName: "Fives", available: true, validHand: false, value: 5, points: 0 },
+                { handName: "Sixes", available: true, validHand: false, value: 6, points: 0 }
             ],
             [
-                { handName: "Three-of-a-Kind", available: true, validHand: false },
-                { handName: "Four-of-a-Kind", available: true, validHand: false }
+                { handName: "Three-of-a-Kind", available: true, validHand: false, points: 0 },
+                { handName: "Four-of-a-Kind", available: true, validHand: false, points: 0 }
             ],
             [
-                { handName: "Full House", available: true, validHand: false, points: 25 },
-                { handName: "Small Straight", available: true, validHand: false, points: 30 },
-                { handName: "Large Straight", available: true, validHand: false, points: 40 }
+                { handName: "Full House", available: true, validHand: false, value: 25, points: 0 },
+                { handName: "Small Straight", available: true, validHand: false, value: 30, points: 0 },
+                { handName: "Large Straight", available: true, validHand: false, value: 40, points: 0 }
             ],
             [
-                { handName: "Yahtzee", validHand: false, count: 0 },
-                { handName: "Chance", available: true }
+                { handName: "Yahtzee", validHand: false, count: 0, value: 50, points: 0 },
+                { handName: "Chance", available: true, points: 0 }
             ]
         ],
         handChildrenLeft: [],
-        handChildrenRight: []
+        handChildrenRight: [],
+        leftTopScore: 0,
+        leftTopBonus: 0,
+        leftTotalScore: 0,
+        yahtzeeBonusCount: 0,
+        yahtzeeBonus: 0,
+        rightTotalScore: 0,
+        grandTotalScore: 0
     }
 
     componentDidMount() {
@@ -86,7 +93,7 @@ class Game extends Component {
                             key={i + '' + j + "Left"}
                             id={i + '' + j + "Left"}
                             hand={this.state.scoreBoard[i][j].handName}
-                            points={""}
+                            points={this.state.scoreBoard[i][j].points}
                         />
                     )
                 }
@@ -96,23 +103,12 @@ class Game extends Component {
                             key={i + '' + j + "Right"}
                             id={i + '' + j + "Right"}
                             hand={this.state.scoreBoard[i][j].handName}
-                            points={""}
+                            points={this.state.scoreBoard[i][j].points}
                         />
                     )
                 }
             }
         }
-
-        // for (let i = 0; i < this.state.scoreBoard[0].length; i++) {
-        //     handChildrenLeft.push(
-        //         <ScoreBoardRow
-        //             key={i + "1"}
-        //             id={i + "1"}
-        //             hand={this.state.scoreBoard[0][i].handName}
-        //             points={""}
-        //         />
-        //     )
-        // }
 
         this.setState({
             diceSlotChildren: diceSlotChildren,
@@ -382,6 +378,13 @@ class Game extends Component {
                 <BottomJumbo
                     handChildrenLeft={this.state.handChildrenLeft}
                     handChildrenRight={this.state.handChildrenRight}
+                    leftTopScore={this.state.leftTopScore}
+                    leftTopBonus={this.state.leftTopBonus}
+                    leftTotalScore={this.state.leftTotalScore}
+                    yahtzeeBonusCount={this.state.yahtzeeBonusCount}
+                    yahtzeeBonus={this.state.yahtzeeBonus}
+                    rightTotalScore={this.state.rightTotalScore}
+                    grandTotalScore={this.state.grandTotalScore}
                 />
             </div>
         )

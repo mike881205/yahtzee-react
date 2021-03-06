@@ -30,12 +30,12 @@ class ScoreBoardRight extends Component {
                     <div className="col">
                         <div className="row">
                             <div className="col">
-                                <p><strong>Yahtzee Bonus x Count</strong></p>
+                                <p><strong>Yahtzee Bonus x {this.props.yahtzeeBonusCount}</strong></p>
                             </div>
                         </div>
                     </div>
                     <div className="col">
-                        <p><strong>Points</strong></p>
+                        <p><strong>{this.props.yahtzeeBonus}</strong></p>
                     </div>
                 </div>
                 <div className="row">
@@ -43,7 +43,7 @@ class ScoreBoardRight extends Component {
                         <h5><strong>Right Total</strong></h5>
                     </div>
                     <div className="col">
-                        <h5><strong>Points</strong></h5>
+                        <h5><strong>{this.props.rightTotalScore}</strong></h5>
                     </div>
                 </div>
             </div>

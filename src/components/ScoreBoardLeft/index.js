@@ -31,7 +31,7 @@ class ScoreBoardLeft extends Component {
                         <p><strong>Top Score</strong></p>
                     </div>
                     <div className="col">
-                        <p><strong>Points</strong></p>
+                        <p><strong>{this.props.leftTopScore}</strong></p>
                     </div>
                 </div>
                 <div className="row">
@@ -39,7 +39,7 @@ class ScoreBoardLeft extends Component {
                         <p><strong>Bonus</strong></p>
                     </div>
                     <div className="col">
-                        <p><strong>Points</strong></p>
+                        <p><strong>{this.props.leftTopBonus}</strong></p>
                     </div>
                 </div>
                 <div className="row">
@@ -47,7 +47,7 @@ class ScoreBoardLeft extends Component {
                         <h5><strong>Left Total</strong></h5>
                     </div>
                     <div className="col">
-                        <h5><strong>Points</strong></h5>
+                        <h5><strong>{this.props.leftTotalScore}</strong></h5>
                     </div>
                 </div>
             </div>

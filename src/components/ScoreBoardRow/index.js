@@ -18,8 +18,7 @@ class ScoreBoardRow extends Component {
                     <p>{this.props.hand}</p>
                 </div>
                 <div className="col">
-                <p>Points</p>
-                {/* <p>{this.props.points}</p> */}
+                <p>{this.props.points}</p>
                 </div>
             </div>
         )
