@@ -31,25 +31,25 @@ class Game extends Component {
         diceSlotChildren: [],
         scoreBoard: [
             [
-                { handName: "Ones", available: true, qty: 0, value: 1, points: 0 },
-                { handName: "Twos", available: true, qty: 0, value: 2, points: 0 },
-                { handName: "Threes", available: true, qty: 0, value: 3, points: 0 },
-                { handName: "Fours", available: true, qty: 0, value: 4, points: 0 },
-                { handName: "Fives", available: true, qty: 0, value: 5, points: 0 },
-                { handName: "Sixes", available: true, qty: 0, value: 6, points: 0 }
+                { handName: "Ones", used: false, qty: 0, value: 1, validHand: false, points: 0 },
+                { handName: "Twos", used: false, qty: 0, value: 2, validHand: false, points: 0 },
+                { handName: "Threes", used: false, qty: 0, value: 3, validHand: false, points: 0 },
+                { handName: "Fours", used: false, qty: 0, value: 4, validHand: false, points: 0 },
+                { handName: "Fives", used: false, qty: 0, value: 5, validHand: false, points: 0 },
+                { handName: "Sixes", used: false, qty: 0, value: 6, validHand: false, points: 0 }
             ],
             [
-                { handName: "Three-of-a-Kind", available: true, validHand: false, points: 0 },
-                { handName: "Four-of-a-Kind", available: true, validHand: false, points: 0 }
+                { handName: "Three-of-a-Kind", used: false, validHand: false, points: 0 },
+                { handName: "Four-of-a-Kind", used: false, validHand: false, points: 0 }
             ],
             [
-                { handName: "Full House", available: true, validHand: false, value: 25, points: 0 },
-                { handName: "Small Straight", available: true, validHand: false, value: 30, points: 0 },
-                { handName: "Large Straight", available: true, validHand: false, value: 40, points: 0 }
+                { handName: "Full House", used: false, validHand: false, value: 25, points: 0 },
+                { handName: "Small Straight", used: false, validHand: false, value: 30, points: 0 },
+                { handName: "Large Straight", used: false, validHand: false, value: 40, points: 0 }
             ],
             [
                 { handName: "Yahtzee", validHand: false, count: 0, value: 50, points: 0 },
-                { handName: "Chance", available: true, points: 0 }
+                { handName: "Chance", used: false, points: 0 }
             ]
         ],
         handChildrenLeft: [],
@@ -68,12 +68,6 @@ class Game extends Component {
         let diceSlotChildren = []
         let handChildrenLeft = []
         let handChildrenRight = []
-        let leftTopScore = this.state.leftTopScore;
-        let leftTotalScore;
-        let rightTopScore = this.state.rightTopScore;
-        let rightTotalScore;
-        let yahtzeeBonus;
-        let grandTotalScore;
 
         for (let i = 0; i < this.state.diceSlots.length; i++) {
             diceSlotChildren.push(
@@ -103,7 +97,6 @@ class Game extends Component {
                             points={this.state.scoreBoard[i][j].points}
                         />
                     )
-                    leftTopScore += this.state.scoreBoard[i][j].points
                 }
                 else {
                     handChildrenRight.push(
@@ -114,26 +107,14 @@ class Game extends Component {
                             points={this.state.scoreBoard[i][j].points}
                         />
                     )
-                    rightTopScore += this.state.scoreBoard[i][j].points
                 }
             }
         }
-
-        yahtzeeBonus = this.state.yahtzeeBonusCount * 100
-        leftTotalScore = leftTopScore + this.state.leftTopBonus
-        rightTotalScore = rightTopScore + yahtzeeBonus
-        grandTotalScore = leftTotalScore + rightTotalScore
 
         this.setState({
             diceSlotChildren: diceSlotChildren,
             handChildrenLeft: handChildrenLeft,
             handChildrenRight: handChildrenRight,
-            leftTopScore: leftTopScore,
-            leftTotalScore: leftTotalScore,
-            rightTopScore: rightTopScore,
-            rightTotalScore: rightTotalScore,
-            yahtzeeBonus: yahtzeeBonus,
-            grandTotalScore: grandTotalScore
         })
     }
 
@@ -182,10 +163,11 @@ class Game extends Component {
                 scoreBoard[0][j].qty = 0
                 handChildrenLeft.push(
                     <ScoreBoardRow
-                        key={j+"Left"}
+                        key={j + "Left"}
                         id={j + "Left"}
                         hand={this.state.scoreBoard[0][j].handName}
                         points={0}
+                        available={false}
                     />
                 )
             }
@@ -348,25 +330,25 @@ class Game extends Component {
 
         for (let i = 0; i < values.length; i++) {
             for (let j = 0; j < scoreBoard[0].length; j++) {
-                if (values[i] === scoreBoard[0][j].value) {
+                if (values[i] === scoreBoard[0][j].value && !scoreBoard[0][j].used) {
                     scoreBoard[0][j].qty++
+                    scoreBoard[0][j].points = scoreBoard[0][j].value * scoreBoard[0][j].qty
+                    scoreBoard[0][j].available = true
                 }
             }
         }
 
         for (let i = 0; i < scoreBoard[0].length; i++) {
-            scoreBoard[0][i].points = scoreBoard[0][i].value * scoreBoard[0][i].qty
             handChildrenLeft.push(
                 <ScoreBoardRow
-                    key={i+"Left"}
+                    key={i + "Left"}
                     id={i + "Left"}
                     hand={this.state.scoreBoard[0][i].handName}
                     points={scoreBoard[0][i].points}
+                    available={scoreBoard[0][i].available}
                 />
             )
         }
-
-        this.setState({scoreBoard: scoreBoard, handChildrenLeft: handChildrenLeft})
 
         // // Find Duplicates
 
@@ -435,6 +417,10 @@ class Game extends Component {
         //         }
         //     }
         // }
+        this.setState({
+            scoreBoard: scoreBoard,
+            handChildrenLeft: handChildrenLeft
+        })
     }
 
     render() {

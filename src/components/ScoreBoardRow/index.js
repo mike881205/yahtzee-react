@@ -12,13 +12,27 @@ class ScoreBoardRow extends Component {
     }
 
     render() {
+        if (this.props.available) {
+            return (
+                <button className="btn-success">
+                    <div className="row" >
+                        <div className="col">
+                            <p>{this.props.hand}</p>
+                        </div>
+                        <div className="col">
+                            <p>{this.props.points}</p>
+                        </div>
+                    </div>
+                </button>
+            )
+        }
         return (
-            <div className="row">
+            <div className="row" >
                 <div className="col">
                     <p>{this.props.hand}</p>
                 </div>
                 <div className="col">
-                <p>{this.props.points}</p>
+                    <p>{this.props.points}</p>
                 </div>
             </div>
         )
