@@ -40,16 +40,12 @@ class Game extends Component {
             ],
             [
                 { handName: "Three-of-a-Kind", used: false, validHand: false, points: 0 },
-                { handName: "Four-of-a-Kind", used: false, validHand: false, points: 0 }
-            ],
-            [
+                { handName: "Four-of-a-Kind", used: false, validHand: false, points: 0 },
                 { handName: "Full House", used: false, validHand: false, value: 25, points: 0 },
                 { handName: "Small Straight", used: false, validHand: false, value: 30, points: 0 },
-                { handName: "Large Straight", used: false, validHand: false, value: 40, points: 0 }
-            ],
-            [
+                { handName: "Large Straight", used: false, validHand: false, value: 40, points: 0 },
                 { handName: "Yahtzee", validHand: false, count: 0, value: 50, points: 0 },
-                { handName: "Chance", used: false, points: 0 }
+                { handName: "Chance", used: false, validHand: false, points: 0 }
             ]
         ],
         handChildrenLeft: [],
@@ -167,7 +163,7 @@ class Game extends Component {
                         id={j + "Left"}
                         hand={this.state.scoreBoard[0][j].handName}
                         points={0}
-                        available={false}
+                        validHand={false}
                     />
                 )
             }
@@ -319,107 +315,126 @@ class Game extends Component {
         let straights = []
         let scoreBoard = this.state.scoreBoard
         let handChildrenLeft = []
+        let handChildrenRight = []
+        let pair = false
+        let threeOfAKind = false
 
         values.sort(function (a, b) {
             return a - b;
         });
 
+        values = [2, 2, 3, 3, 3]
         console.log(values)
 
         // Find side values
 
         for (let i = 0; i < values.length; i++) {
             for (let j = 0; j < scoreBoard[0].length; j++) {
-                if (values[i] === scoreBoard[0][j].value && !scoreBoard[0][j].used) {
+                if (values[i] === scoreBoard[0][j].value) {
                     scoreBoard[0][j].qty++
-                    scoreBoard[0][j].points = scoreBoard[0][j].value * scoreBoard[0][j].qty
-                    scoreBoard[0][j].available = true
+                    if (!scoreBoard[0][j].used) {
+                        scoreBoard[0][j].validHand = true
+                        scoreBoard[0][j].points = scoreBoard[0][j].value * scoreBoard[0][j].qty
+                    }
                 }
             }
         }
 
+        // { handName: "Three-of-a-Kind", used: false, validHand: false, points: 0 },
+        // { handName: "Four-of-a-Kind", used: false, validHand: false, points: 0 },
+        // { handName: "Full House", used: false, validHand: false, value: 25, points: 0 },
+        // { handName: "Small Straight", used: false, validHand: false, value: 30, points: 0 },
+        // { handName: "Large Straight", used: false, validHand: false, value: 40, points: 0 },
+        // { handName: "Yahtzee", validHand: false, count: 0, value: 50, points: 0 },
+        // { handName: "Chance", used: false, points: 0 }
+
         for (let i = 0; i < scoreBoard[0].length; i++) {
-            handChildrenLeft.push(
-                <ScoreBoardRow
-                    key={i + "Left"}
-                    id={i + "Left"}
-                    hand={this.state.scoreBoard[0][i].handName}
-                    points={scoreBoard[0][i].points}
-                    available={scoreBoard[0][i].available}
-                />
-            )
+            if (scoreBoard[0][i].points > 0) {
+                switch (scoreBoard[0][i].qty) {
+                    // case 1:
+
+                    // break;
+                    case 2:
+                        console.log("Pair")
+                        pair = true
+                        break;
+                    case 3:
+                        console.log("Three-of-a-Kind")
+                        if (!scoreBoard[1][0].used) {
+                            scoreBoard[1][0].validHand = true
+                        }
+                        threeOfAKind = true
+                        break;
+                    case 4:
+                        console.log("Three-of-a-Kind")
+                        console.log("Four-of-a-Kind")
+                        if (!scoreBoard[1][0].used) {
+                            scoreBoard[1][0].validHand = true
+                        }
+                        else if (!scoreBoard[1][1].used) {
+                            scoreBoard[1][1].validHand = true
+                        }
+                        break;
+                    case 5:
+                        console.log("Three-of-a-Kind")
+                        console.log("Four-of-a-Kind")
+                        console.log("Yahteeze")
+                        scoreBoard[1][5].validHand = true
+                        if (!scoreBoard[1][0].used) {
+                            scoreBoard[1][0].validHand = true
+                        }
+                        else if (!scoreBoard[1][1].used) {
+                            scoreBoard[1][1].validHand = true
+                        }
+                        break;
+                }
+            }
         }
 
-        // // Find Duplicates
+        // Full House
+        if (pair && threeOfAKind && !scoreBoard[1][2].used) {
+            scoreBoard[1][2].validHand = true
+            console.log("Full House")
+        }
 
-        // let duplicates = values.filter((item, index) => values.indexOf(item) !== index)
-        // let duplicates2 = duplicates.filter((item, index) => duplicates.indexOf(item) !== index)
+        // Chance
+        if (!scoreBoard[1][6].used) {
+            scoreBoard[1][6].validHand = true
+            scoreBoard[1][6].points = values.reduce((a, b) => a + b, 0)
+        }
 
-        // switch (duplicates.length) {
-        //     case 2:
-        //         if (duplicates2.length === 1) {
-        //             scoreBoard[1][0].validHand = true
-        //         }
-        //         break;
-        //     case 3:
-        //         if (duplicates2.length === 1) {
-        //             scoreBoard[1][0].validHand = true
-        //             scoreBoard[2][0].validHand = true
-        //         }
-        //         else {
-        //             scoreBoard[1][0].validHand = true
-        //             scoreBoard[1][1].validHand = true
-        //         }
-        //         break;
-        //     case 4:
-        //         scoreBoard[1][0].validHand = true
-        //         scoreBoard[1][1].validHand = true
-        //         scoreBoard[3][1].validHand = true
-        //         break;
-        // }
+        for (let i = 0; i < scoreBoard.length; i++) {
+            for (let j = 0; j < scoreBoard[i].length; j++) {
+                if (i === 0) {
+                    handChildrenLeft.push(
+                        <ScoreBoardRow
+                            key={i + '' + j + "Left"}
+                            id={i + '' + j + "Left"}
+                            hand={scoreBoard[i][j].handName}
+                            points={scoreBoard[i][j].points}
+                            validHand={scoreBoard[i][j].validHand}
+                        />
+                    )
+                }
+                else {
+                    handChildrenRight.push(
+                        <ScoreBoardRow
+                            key={i + '' + j + "Left"}
+                            id={i + '' + j + "Left"}
+                            hand={scoreBoard[i][j].handName}
+                            points={scoreBoard[i][j].points}
+                            validHand={scoreBoard[i][j].validHand}
+                        />
+                    )
+                }
+            }
+        }
 
-        // // Find Straights
-
-        // if (!scoreBoard[1][0].validHand) {
-
-        //     for (let i = 0; i < values.length - 1; i++) {
-        //         if (values[i + 1] - values[i] === 1) {
-        //             straights.push(values[i], values[i + 1])
-        //         }
-        //     }
-
-        //     let strtBeforeSplice = straights
-        //     console.log(strtBeforeSplice)
-
-        //     for (let i = 0; i < straights.length; i++) {
-        //         if (straights[i] === straights[i + 1]) {
-        //             straights.splice(i, 1)
-        //         }
-        //     }
-
-        //     let strtAfterSplice = straights
-        //     console.log(strtAfterSplice)
-
-        //     if (strtAfterSplice.length === 4 && strtAfterSplice !== strtBeforeSplice) {
-        //         scoreBoard[2][1].validHand = true
-        //     }
-        //     else if (strtAfterSplice.length === 5 && strtAfterSplice == strtBeforeSplice) {
-        //         scoreBoard[2][1].validHand = true
-        //         scoreBoard[2][2].validHand = true
-        //     }
-        // }
-
-        // console.log("Valid Hands")
-        // for (let i = 0; i < scoreBoard.length; i++) {
-        //     for (let j = 0; j < scoreBoard[i].length; j++) {
-        //         if (scoreBoard[i][j].validHand) {
-        //             console.log(scoreBoard[i][j].handName)
-        //         }
-        //     }
-        // }
+        
         this.setState({
             scoreBoard: scoreBoard,
-            handChildrenLeft: handChildrenLeft
+            handChildrenLeft: handChildrenLeft,
+            handChildrenRight: handChildrenRight
         })
     }
 

@@ -12,7 +12,7 @@ class ScoreBoardRow extends Component {
     }
 
     render() {
-        if (this.props.available) {
+        if (this.props.validHand) {
             return (
                 <button className="btn-success">
                     <div className="row" >
@@ -26,18 +26,20 @@ class ScoreBoardRow extends Component {
                 </button>
             )
         }
-        return (
-            <div className="row" >
-                <div className="col">
-                    <p>{this.props.hand}</p>
+        else {
+            return (
+                <div className="row" >
+                    <div className="col">
+                        <p>{this.props.hand}</p>
+                    </div>
+                    <div className="col">
+                        <p>{this.props.points}</p>
+                    </div>
                 </div>
-                <div className="col">
-                    <p>{this.props.points}</p>
-                </div>
-            </div>
-        )
-    }
+            )
+        }
 
+    }
 }
 
 export default ScoreBoardRow
