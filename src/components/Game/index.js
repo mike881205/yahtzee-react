@@ -87,8 +87,8 @@ class Game extends Component {
                 if (i === 0) {
                     handChildrenLeft.push(
                         <ScoreBoardRow
-                            key={i + '' + j + "Left"}
-                            id={i + '' + j + "Left"}
+                            key={j + "Left"}
+                            id={j + "Left"}
                             hand={this.state.scoreBoard[i][j].handName}
                             points={this.state.scoreBoard[i][j].points}
                         />
@@ -97,8 +97,8 @@ class Game extends Component {
                 else {
                     handChildrenRight.push(
                         <ScoreBoardRow
-                            key={i + '' + j + "Right"}
-                            id={i + '' + j + "Right"}
+                            key={j + "Right"}
+                            id={j + "Right"}
                             hand={this.state.scoreBoard[i][j].handName}
                             points={this.state.scoreBoard[i][j].points}
                         />
@@ -441,22 +441,24 @@ class Game extends Component {
                 if (i === 0) {
                     handChildrenLeft.push(
                         <ScoreBoardRow
-                            key={i + '' + j + "Left"}
-                            id={i + '' + j + "Left"}
+                            key={j + "Left"}
+                            id={j + "Left"}
                             hand={scoreBoard[i][j].handName}
                             points={scoreBoard[i][j].points}
                             validHand={scoreBoard[i][j].validHand}
+                            selectHand={this.selectHand}
                         />
                     )
                 }
                 else {
                     handChildrenRight.push(
                         <ScoreBoardRow
-                            key={i + '' + j + "Left"}
-                            id={i + '' + j + "Left"}
+                            key={j + "Right"}
+                            id={j + "Right"}
                             hand={scoreBoard[i][j].handName}
                             points={scoreBoard[i][j].points}
                             validHand={scoreBoard[i][j].validHand}
+                            selectHand={this.selectHand}
                         />
                     )
                 }
@@ -470,9 +472,9 @@ class Game extends Component {
         })
     }
 
-    // selectHand = event => {
-
-    // }
+    selectHand = event => {
+        console.log(event.currentTarget.id)
+    }
 
     render() {
         return (
