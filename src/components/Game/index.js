@@ -315,8 +315,8 @@ class Game extends Component {
         let scoreBoard = this.state.scoreBoard
         let handChildrenLeft = []
         let handChildrenRight = []
-        let pair = false
-        let threeOfAKind = false
+        let FHpair = false
+        let FH3oaK = false
 
         values.sort(function (a, b) {
             return a - b;
@@ -338,28 +338,62 @@ class Game extends Component {
             }
         }
 
+        // { handName: "Three-of-a-Kind", used: false, validHand: false, points: 0 },
+        // { handName: "Four-of-a-Kind", used: false, validHand: false, points: 0 },
+        // { handName: "Full House", used: false, validHand: false, value: 25, points: 0 },
+        // { handName: "Small Straight", used: false, validHand: false, value: 30, points: 0 },
+        // { handName: "Large Straight", used: false, validHand: false, value: 40, points: 0 },
+        // { handName: "Yahtzee", validHand: false, count: 0, value: 50, points: 0 },
+        // { handName: "Chance", used: false, validHand: false, points: 0 }
+
+        // Find Straights
+        for (let i = 0; i < values.length; i++) {
+            if (i + 3 < values.length && values[i + 3] - values[i + 2] === 1 && values[i + 2] - values[i + 1] === 1 && values[i + 1] - values[i] === 1) {
+                if (!scoreBoard[1][3].used) {
+                    scoreBoard[1][3].validHand = true
+                    scoreBoard[1][3].points = scoreBoard[1][3].value
+                    console.log("small straight")
+                }
+            }
+            else if (i + 4 < values.length && values[i + 4] - values[i + 3] === 1 && values[i + 3] - values[i + 2] === 1 && values[i + 2] - values[i + 1] === 1 && values[i + 1] - values[i] === 1) {
+                if (!scoreBoard[1][3].used) {
+                    scoreBoard[1][3].validHand = true
+                    scoreBoard[1][3].points = scoreBoard[1][3].value
+                    console.log("small straight")
+                }
+                else if (!scoreBoard[1][4].used) {
+                    scoreBoard[1][4].validHand = true
+                    scoreBoard[1][4].points = scoreBoard[1][4].value
+                    console.log("large straight")
+                }
+            }
+        }
+
+        // Find 3/4 of a kind and yahtzee
         for (let i = 0; i < scoreBoard[0].length; i++) {
             if (scoreBoard[0][i].points > 0) {
                 switch (scoreBoard[0][i].qty) {
                     case 2:
-                        console.log("Pair")
-                        pair = true
+                        console.log("FHpair")
+                        FHpair = true
                         break;
                     case 3:
                         console.log("Three-of-a-Kind")
                         if (!scoreBoard[1][0].used) {
                             scoreBoard[1][0].validHand = true
+                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
                         }
-                        threeOfAKind = true
+                        FH3oaK = true
                         break;
                     case 4:
                         console.log("Three-of-a-Kind")
                         console.log("Four-of-a-Kind")
                         if (!scoreBoard[1][0].used) {
-                            scoreBoard[1][0].validHand = true
+                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
                         }
                         else if (!scoreBoard[1][1].used) {
                             scoreBoard[1][1].validHand = true
+                            scoreBoard[1][1].points = values.reduce((a, b) => a + b, 0)
                         }
                         break;
                     case 5:
@@ -367,45 +401,41 @@ class Game extends Component {
                         console.log("Four-of-a-Kind")
                         console.log("Yahteeze")
                         scoreBoard[1][5].validHand = true
+                        if (scoreBoard[1][5].count === 0) {
+                            scoreBoard[1][5].points = scoreBoard[1][5].value
+                        }
+                        else {
+                            scoreBoard[1][5].points = 100
+                        }
+                        
                         if (!scoreBoard[1][0].used) {
                             scoreBoard[1][0].validHand = true
+                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
                         }
                         else if (!scoreBoard[1][1].used) {
                             scoreBoard[1][1].validHand = true
+                            scoreBoard[1][1].points = values.reduce((a, b) => a + b, 0)
                         }
                         break;
                 }
             }
         }
 
-        // Straights
-        for (let i = 0; i < values.length; i++) {
-            if (i+3 < values.length && values[i+3] - values[i+2] === 1 && values[i+2] - values[i+1] === 1 && values[i+1] - values[i] === 1){
-                if (!scoreBoard[1][3].used) {
-                    scoreBoard[1][3].validHand=true
-                    console.log("small straight")
-                }
-            }
-            if (i+4 < values.length && values[i+4] - values[i+3] === 1 && values[i+3] - values[i+2] === 1 && values[i+2] - values[i+1] === 1 && values[i+1] - values[i] === 1) {
-                if (!scoreBoard[1][4].used) {
-                    scoreBoard[1][4].validHand=true
-                    console.log("large straight")
-                }
-            }
-        }
-
-        // Full House
-        if (pair && threeOfAKind && !scoreBoard[1][2].used) {
+        // Find Full House
+        if (FHpair && FH3oaK && !scoreBoard[1][2].used) {
             scoreBoard[1][2].validHand = true
+            scoreBoard[1][2].points = scoreBoard[1][2].value
             console.log("Full House")
         }
 
-        // Chance
+
+        // Find Chance
         if (!scoreBoard[1][6].used) {
             scoreBoard[1][6].validHand = true
             scoreBoard[1][6].points = values.reduce((a, b) => a + b, 0)
         }
 
+        // Update Scoreboard
         for (let i = 0; i < scoreBoard.length; i++) {
             for (let j = 0; j < scoreBoard[i].length; j++) {
                 if (i === 0) {
@@ -433,13 +463,16 @@ class Game extends Component {
             }
         }
 
-
         this.setState({
             scoreBoard: scoreBoard,
             handChildrenLeft: handChildrenLeft,
             handChildrenRight: handChildrenRight
         })
     }
+
+    // selectHand = event => {
+
+    // }
 
     render() {
         return (
