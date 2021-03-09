@@ -31,21 +31,21 @@ class Game extends Component {
         diceSlotChildren: [],
         scoreBoard: [
             [
-                { handName: "Ones", used: false, qty: 0, value: 1, validHand: false, points: 0 },
-                { handName: "Twos", used: false, qty: 0, value: 2, validHand: false, points: 0 },
-                { handName: "Threes", used: false, qty: 0, value: 3, validHand: false, points: 0 },
-                { handName: "Fours", used: false, qty: 0, value: 4, validHand: false, points: 0 },
-                { handName: "Fives", used: false, qty: 0, value: 5, validHand: false, points: 0 },
-                { handName: "Sixes", used: false, qty: 0, value: 6, validHand: false, points: 0 }
+                { handName: "Ones", used: false, qty: 0, value: 1, validHand: false, selected: false, points: 0 },
+                { handName: "Twos", used: false, qty: 0, value: 2, validHand: false, selected: false, points: 0 },
+                { handName: "Threes", used: false, qty: 0, value: 3, validHand: false, selected: false, points: 0 },
+                { handName: "Fours", used: false, qty: 0, value: 4, validHand: false, selected: false, points: 0 },
+                { handName: "Fives", used: false, qty: 0, value: 5, validHand: false, selected: false, points: 0 },
+                { handName: "Sixes", used: false, qty: 0, value: 6, validHand: false, selected: false, points: 0 }
             ],
             [
-                { handName: "Three-of-a-Kind", used: false, validHand: false, points: 0 },
-                { handName: "Four-of-a-Kind", used: false, validHand: false, points: 0 },
-                { handName: "Full House", used: false, validHand: false, value: 25, points: 0 },
-                { handName: "Small Straight", used: false, validHand: false, value: 30, points: 0 },
-                { handName: "Large Straight", used: false, validHand: false, value: 40, points: 0 },
-                { handName: "Yahtzee", validHand: false, count: 0, value: 50, points: 0 },
-                { handName: "Chance", used: false, validHand: false, points: 0 }
+                { handName: "Three-of-a-Kind", used: false, validHand: false, selected: false, points: 0 },
+                { handName: "Four-of-a-Kind", used: false, validHand: false, selected: false, points: 0 },
+                { handName: "Full House", used: false, validHand: false, selected: false, value: 25, points: 0 },
+                { handName: "Small Straight", used: false, validHand: false, selected: false, value: 30, points: 0 },
+                { handName: "Large Straight", used: false, validHand: false, selected: false, value: 40, points: 0 },
+                { handName: "Yahtzee", validHand: false, selected: false, count: 0, value: 50, points: 0 },
+                { handName: "Chance", used: false, validHand: false, selected: false, points: 0 }
             ]
         ],
         handChildrenLeft: [],
@@ -87,20 +87,22 @@ class Game extends Component {
                 if (i === 0) {
                     handChildrenLeft.push(
                         <ScoreBoardRow
-                            key={j + "Left"}
-                            id={j + "Left"}
+                            key={i + '' + j}
+                            id={i + '' + j}
                             hand={this.state.scoreBoard[i][j].handName}
                             points={this.state.scoreBoard[i][j].points}
+                            selected={this.state.scoreBoard[i][j].selected}
                         />
                     )
                 }
                 else {
                     handChildrenRight.push(
                         <ScoreBoardRow
-                            key={j + "Right"}
-                            id={j + "Right"}
+                            key={i + '' + j}
+                            id={i + '' + j}
                             hand={this.state.scoreBoard[i][j].handName}
                             points={this.state.scoreBoard[i][j].points}
+                            selected={this.state.scoreBoard[i][j].selected}
                         />
                     )
                 }
@@ -155,18 +157,18 @@ class Game extends Component {
                     />
                 )
             }
-            for (let j = 0; j < scoreBoard[0].length; j++) {
-                scoreBoard[0][j].qty = 0
-                handChildrenLeft.push(
-                    <ScoreBoardRow
-                        key={j + "Left"}
-                        id={j + "Left"}
-                        hand={this.state.scoreBoard[0][j].handName}
-                        points={0}
-                        validHand={false}
-                    />
-                )
-            }
+            // for (let j = 0; j < scoreBoard[0].length; j++) {
+            //     scoreBoard[0][j].qty = 0
+            //     handChildrenLeft.push(
+            //         <ScoreBoardRow
+            //             key={j + "Left"}
+            //             id={j + "Left"}
+            //             hand={this.state.scoreBoard[0][j].handName}
+            //             points={0}
+            //             validHand={false}
+            //         />
+            //     )
+            // }
 
             this.setState({
                 roll: roll,
@@ -338,13 +340,65 @@ class Game extends Component {
             }
         }
 
-        // { handName: "Three-of-a-Kind", used: false, validHand: false, points: 0 },
-        // { handName: "Four-of-a-Kind", used: false, validHand: false, points: 0 },
-        // { handName: "Full House", used: false, validHand: false, value: 25, points: 0 },
-        // { handName: "Small Straight", used: false, validHand: false, value: 30, points: 0 },
-        // { handName: "Large Straight", used: false, validHand: false, value: 40, points: 0 },
-        // { handName: "Yahtzee", validHand: false, count: 0, value: 50, points: 0 },
-        // { handName: "Chance", used: false, validHand: false, points: 0 }
+        // Find 3/4 of a kind and yahtzee
+        for (let i = 0; i < scoreBoard[0].length; i++) {
+            if (scoreBoard[0][i].points > 0) {
+                switch (scoreBoard[0][i].qty) {
+                    case 2:
+                        console.log("FHpair")
+                        FHpair = true
+                        break;
+                    case 3:
+                        console.log("Three-of-a-Kind")
+                        if (!scoreBoard[1][0].used) {
+                            scoreBoard[1][0].validHand = true
+                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
+                        }
+                        FH3oaK = true
+                        break;
+                    case 4:
+                        console.log("Three-of-a-Kind")
+                        console.log("Four-of-a-Kind")
+                        if (!scoreBoard[1][0].used) {
+                            scoreBoard[1][0].validHand = true
+                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
+                        }
+                        else if (!scoreBoard[1][1].used) {
+                            scoreBoard[1][1].validHand = true
+                            scoreBoard[1][1].points = values.reduce((a, b) => a + b, 0)
+                        }
+                        break;
+                    case 5:
+                        console.log("Three-of-a-Kind")
+                        console.log("Four-of-a-Kind")
+                        console.log("Yahteeze")
+                        scoreBoard[1][5].validHand = true
+                        if (scoreBoard[1][5].count === 0) {
+                            scoreBoard[1][5].points = scoreBoard[1][5].value
+                        }
+                        else {
+                            scoreBoard[1][5].points = 100
+                        }
+
+                        if (!scoreBoard[1][0].used) {
+                            scoreBoard[1][0].validHand = true
+                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
+                        }
+                        else if (!scoreBoard[1][1].used) {
+                            scoreBoard[1][1].validHand = true
+                            scoreBoard[1][1].points = values.reduce((a, b) => a + b, 0)
+                        }
+                        break;
+                }
+            }
+        }
+
+        // Find Full House
+        if (FHpair && FH3oaK && !scoreBoard[1][2].used) {
+            scoreBoard[1][2].validHand = true
+            scoreBoard[1][2].points = scoreBoard[1][2].value
+            console.log("Full House")
+        }
 
         // Find Straights
         for (let i = 0; i < values.length; i++) {
@@ -369,66 +423,6 @@ class Game extends Component {
             }
         }
 
-        // Find 3/4 of a kind and yahtzee
-        for (let i = 0; i < scoreBoard[0].length; i++) {
-            if (scoreBoard[0][i].points > 0) {
-                switch (scoreBoard[0][i].qty) {
-                    case 2:
-                        console.log("FHpair")
-                        FHpair = true
-                        break;
-                    case 3:
-                        console.log("Three-of-a-Kind")
-                        if (!scoreBoard[1][0].used) {
-                            scoreBoard[1][0].validHand = true
-                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
-                        }
-                        FH3oaK = true
-                        break;
-                    case 4:
-                        console.log("Three-of-a-Kind")
-                        console.log("Four-of-a-Kind")
-                        if (!scoreBoard[1][0].used) {
-                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
-                        }
-                        else if (!scoreBoard[1][1].used) {
-                            scoreBoard[1][1].validHand = true
-                            scoreBoard[1][1].points = values.reduce((a, b) => a + b, 0)
-                        }
-                        break;
-                    case 5:
-                        console.log("Three-of-a-Kind")
-                        console.log("Four-of-a-Kind")
-                        console.log("Yahteeze")
-                        scoreBoard[1][5].validHand = true
-                        if (scoreBoard[1][5].count === 0) {
-                            scoreBoard[1][5].points = scoreBoard[1][5].value
-                        }
-                        else {
-                            scoreBoard[1][5].points = 100
-                        }
-                        
-                        if (!scoreBoard[1][0].used) {
-                            scoreBoard[1][0].validHand = true
-                            scoreBoard[1][0].points = values.reduce((a, b) => a + b, 0)
-                        }
-                        else if (!scoreBoard[1][1].used) {
-                            scoreBoard[1][1].validHand = true
-                            scoreBoard[1][1].points = values.reduce((a, b) => a + b, 0)
-                        }
-                        break;
-                }
-            }
-        }
-
-        // Find Full House
-        if (FHpair && FH3oaK && !scoreBoard[1][2].used) {
-            scoreBoard[1][2].validHand = true
-            scoreBoard[1][2].points = scoreBoard[1][2].value
-            console.log("Full House")
-        }
-
-
         // Find Chance
         if (!scoreBoard[1][6].used) {
             scoreBoard[1][6].validHand = true
@@ -441,24 +435,26 @@ class Game extends Component {
                 if (i === 0) {
                     handChildrenLeft.push(
                         <ScoreBoardRow
-                            key={j + "Left"}
-                            id={j + "Left"}
+                            key={i + '' + j}
+                            id={i + '' + j}
                             hand={scoreBoard[i][j].handName}
                             points={scoreBoard[i][j].points}
                             validHand={scoreBoard[i][j].validHand}
                             selectHand={this.selectHand}
+                            selected={scoreBoard[i][j].selected}
                         />
                     )
                 }
                 else {
                     handChildrenRight.push(
                         <ScoreBoardRow
-                            key={j + "Right"}
-                            id={j + "Right"}
+                            key={i + '' + j}
+                            id={i + '' + j}
                             hand={scoreBoard[i][j].handName}
                             points={scoreBoard[i][j].points}
                             validHand={scoreBoard[i][j].validHand}
                             selectHand={this.selectHand}
+                            selected={scoreBoard[i][j].selected}
                         />
                     )
                 }
@@ -473,7 +469,61 @@ class Game extends Component {
     }
 
     selectHand = event => {
-        console.log(event.currentTarget.id)
+        let scoreBoard = this.state.scoreBoard
+        let parentIndex = parseInt(event.currentTarget.id.split('')[0])
+        let childIndex = parseInt(event.currentTarget.id.split('')[1])
+        let handChildrenLeft = []
+        let handChildrenRight = []
+        console.log(parentIndex, childIndex)
+
+        // scoreBoard[parentIndex][childIndex].selected = true
+
+        for (let i = 0; i < scoreBoard.length; i++) {
+            for (let j = 0; j < scoreBoard[i].length; j++) {
+                if (i !== parentIndex || j !== childIndex) {
+                    scoreBoard[i][j].selected = false
+                }
+                else {
+                    scoreBoard[i][j].selected = true
+                }
+            }
+        }
+        for (let i = 0; i < scoreBoard.length; i++) {
+            for (let j = 0; j < scoreBoard[i].length; j++) {
+                if (i === 0) {
+                    handChildrenLeft.push(
+                        <ScoreBoardRow
+                            key={i + '' + j}
+                            id={i + '' + j}
+                            hand={scoreBoard[i][j].handName}
+                            points={scoreBoard[i][j].points}
+                            validHand={scoreBoard[i][j].validHand}
+                            selectHand={this.selectHand}
+                            selected={scoreBoard[i][j].selected}
+                        />
+                    )
+                }
+                else {
+                    handChildrenRight.push(
+                        <ScoreBoardRow
+                            key={i + '' + j}
+                            id={i + '' + j}
+                            hand={scoreBoard[i][j].handName}
+                            points={scoreBoard[i][j].points}
+                            validHand={scoreBoard[i][j].validHand}
+                            selectHand={this.selectHand}
+                            selected={scoreBoard[i][j].selected}
+                        />
+                    )
+                }
+            }
+        }
+
+        this.setState({
+            scoreBoard: scoreBoard,
+            handChildrenLeft: handChildrenLeft,
+            handChildrenRight: handChildrenRight
+        })
     }
 
     render() {

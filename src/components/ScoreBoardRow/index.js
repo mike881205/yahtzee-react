@@ -16,9 +16,10 @@ class ScoreBoardRow extends Component {
     render() {
         if (this.props.validHand) {
             return (
-                <button className="btn-success"
-                id={this.props.id} onClick={this.props.selectHand}
-                    // style={this.state.styles}
+                <button 
+                className={this.props.selected ? "btn-warning" : "btn-success"}
+                id={this.props.id} 
+                onClick={this.props.selectHand}
                 >
                     <div className="row" >
                         <div className="col">
