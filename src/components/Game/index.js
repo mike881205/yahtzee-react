@@ -312,7 +312,6 @@ class Game extends Component {
 
     calcHand = (values) => {
 
-        let straights = []
         let scoreBoard = this.state.scoreBoard
         let handChildrenLeft = []
         let handChildrenRight = []
@@ -323,7 +322,6 @@ class Game extends Component {
             return a - b;
         });
 
-        values = [2, 2, 3, 3, 3]
         console.log(values)
 
         // Find side values
@@ -340,20 +338,9 @@ class Game extends Component {
             }
         }
 
-        // { handName: "Three-of-a-Kind", used: false, validHand: false, points: 0 },
-        // { handName: "Four-of-a-Kind", used: false, validHand: false, points: 0 },
-        // { handName: "Full House", used: false, validHand: false, value: 25, points: 0 },
-        // { handName: "Small Straight", used: false, validHand: false, value: 30, points: 0 },
-        // { handName: "Large Straight", used: false, validHand: false, value: 40, points: 0 },
-        // { handName: "Yahtzee", validHand: false, count: 0, value: 50, points: 0 },
-        // { handName: "Chance", used: false, points: 0 }
-
         for (let i = 0; i < scoreBoard[0].length; i++) {
             if (scoreBoard[0][i].points > 0) {
                 switch (scoreBoard[0][i].qty) {
-                    // case 1:
-
-                    // break;
                     case 2:
                         console.log("Pair")
                         pair = true
@@ -387,6 +374,22 @@ class Game extends Component {
                             scoreBoard[1][1].validHand = true
                         }
                         break;
+                }
+            }
+        }
+
+        // Straights
+        for (let i = 0; i < values.length; i++) {
+            if (i+3 < values.length && values[i+3] - values[i+2] === 1 && values[i+2] - values[i+1] === 1 && values[i+1] - values[i] === 1){
+                if (!scoreBoard[1][3].used) {
+                    scoreBoard[1][3].validHand=true
+                    console.log("small straight")
+                }
+            }
+            if (i+4 < values.length && values[i+4] - values[i+3] === 1 && values[i+3] - values[i+2] === 1 && values[i+2] - values[i+1] === 1 && values[i+1] - values[i] === 1) {
+                if (!scoreBoard[1][4].used) {
+                    scoreBoard[1][4].validHand=true
+                    console.log("large straight")
                 }
             }
         }
@@ -430,7 +433,7 @@ class Game extends Component {
             }
         }
 
-        
+
         this.setState({
             scoreBoard: scoreBoard,
             handChildrenLeft: handChildrenLeft,
